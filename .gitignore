@@ -1,8 +1,9 @@
 clincal_data_300523.xlsx
-data
+early_relapse/data
 /.idea/genomed_research.iml
 /.idea/misc.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
 /venv/
+data
