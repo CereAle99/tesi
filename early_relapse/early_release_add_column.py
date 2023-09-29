@@ -16,7 +16,7 @@ clinical_data['early_relapse'] = ((clinical_data['PFS_I_EVENT'] == 1) &
                                   (clinical_data['PFS_I_MONTHS'] <= 12)).astype(int)
 
 # save a csv file with just the early_relapse data
-early_relapse = clinical_data.loc[:, ["PFS_I_MONTHS", "early_relapse"]]
+early_relapse = clinical_data.loc[:, ["MPC", "PFS_I_MONTHS", "early_relapse"]]
 file_path = data_path + 'early_relapse.csv'
 early_relapse.to_csv(file_path, index=False)
 
