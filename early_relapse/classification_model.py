@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
-# load data tables
+# load data table
 data = pd.read_csv('your_data.csv')
 X = data.drop(columns=['EarlyRelapse'])  # Caratteristiche
 y = data['EarlyRelapse']  # Etichette
