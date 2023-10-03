@@ -9,4 +9,5 @@ data_path = current_directory + '/data/'
 img = nib.load(data_path + "Spine.nii.gz")
 data = img.get_fdata()
 
-
+img = nib.Nifti1Image(data, np.eye(4))
+nib.save(img, os.path.join(data_path, 'show_results.nii.gz'))
