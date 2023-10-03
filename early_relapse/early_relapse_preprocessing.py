@@ -27,16 +27,19 @@ dataframe0 = pd.read_csv(data_path + "clinical_data_300523.csv",
                          dtype={'inst': object})  # Reading clinical dataset
 dataframe0 = dataframe0.set_index('MPC')
 dataframe0.index.name = None
+dataframe0 = dataframe0.drop(columns='gDNA_sample_sheet_ID', axis=1)
 print("CLINICAL DATA :", dataframe0.shape)
 
 dataframe1 = pd.read_csv(data_path + "tot_rad_feats_CT.csv", sep=',')  # Reading CT dataset
 dataframe1 = dataframe1.set_index('MPC')
 dataframe1.index.name = None
+dataframe1 = dataframe1.drop(columns='MPC_EXAM_ID', axis=1)
 print("CT :", dataframe1.shape)
 
 dataframe2 = pd.read_csv(data_path + "tot_rad_feats_PET.csv", sep=',')  # Reading DD dataset
 dataframe2 = dataframe2.set_index('MPC')
 dataframe2.index.name = None
+dataframe2 = dataframe2.drop(columns='MPC_EXAM_ID', axis=1)
 print("PET :", dataframe2.shape)
 
 # Missing data analysis
@@ -45,6 +48,7 @@ print("PET :", dataframe2.shape)
 dataframe0 = dataframe0.replace("nv", np.nan)
 dataframe0 = dataframe0.replace("single", 1)
 dataframe0 = dataframe0.replace("double", 2)
+
 
 threshold = 20  # Set missing data threshold in %
 
@@ -196,7 +200,7 @@ def plot_km_curve_for_feature(early_relapse_df, dataframe, feature_identifier):
 
 
 # Usage example:
-plot_km_curve_for_feature(early_relapse, dataframes["CLI"], 113)
+plot_km_curve_for_feature(early_relapse, dataframes["CLI"], 30)
 
 
 def plot_km_curve_for_features(survival_df, dataframe, features, value=1):
@@ -237,7 +241,7 @@ def plot_km_curve_for_features(survival_df, dataframe, features, value=1):
 
 
 # Usage example:
-features_to_plot = [111, 112, 113]
+features_to_plot = [45, 46, 47]
 plot_km_curve_for_features(early_relapse, dataframes["CLI"], features_to_plot)
 
 
@@ -274,12 +278,12 @@ def remove_duplicated_data(dataframes_dict, print_output=True):
         deduplicated_df = temp_df.drop_duplicates().set_index(df1.index.name or 'index')
 
         # Track and remove duplicated columns
-        duplicated_columns = df1.columns[df.T.duplicated()].tolist()
+        duplicated_columns = df1.columns[df1.T.duplicated()].tolist()
         deduplicated_df = deduplicated_df.T.drop_duplicates().T
 
         # Store dropped rows and columns in the dropped_data dictionary
         dropped_data[omic] = {
-            "dropped_rows": duplicated_rows.set_index(df.index.name or 'index'),
+            "dropped_rows": duplicated_rows.set_index(df1.index.name or 'index'),
             "dropped_columns": duplicated_columns
         }
 
@@ -294,3 +298,36 @@ def remove_duplicated_data(dataframes_dict, print_output=True):
 
 # Call the function with your dataframes_transposed
 dataframes, dropped = remove_duplicated_data(dataframes, print_output=True)
+
+
+# Determine the number of omics DataFrames
+num_omics = len(dataframes)
+
+# Create subplots for all omics DataFrames
+fig, axes = plt.subplots(num_omics, 2, figsize=(12, 5 * num_omics))
+
+# Iterate through dataframes and create plots for each omics
+for i, (omics_name, df3) in enumerate(dataframes.items()):
+    # Compute feature variability (variance) for columns
+    feature_variability = df3.var(axis=0, skipna=True)
+
+    # Identify columns with all zeros
+    null_feature_count = (df3.sum(axis=0) == 0).sum()
+
+    # Create KDE plots for feature variability in the i-th subplot
+    sns.kdeplot(feature_variability, ax=axes[i, 0])
+    axes[i, 0].set_title(f'{omics_name} - Feature Variability')
+    axes[i, 0].set_xlabel('Variance')
+
+    # Plot a bar for the count of null features
+    axes[i, 1].bar(1, null_feature_count)  # Only one bar showing count of all-zero columns
+    axes[i, 1].set_title(f'{omics_name} - Null Features')
+    axes[i, 1].set_ylabel('Count of All-Zero Columns')
+    axes[i, 1].set_xticks([])  # Remove x-ticks as they are not relevant here
+
+# Adjust layout and show all plots
+plt.tight_layout()
+plt.show()
+
+
+
