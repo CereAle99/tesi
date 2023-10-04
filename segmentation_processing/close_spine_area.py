@@ -10,3 +10,7 @@ data_path = current_directory + '/data/'
 # Load the NIfTI segmentation and put it into a numpy array
 img = nib.load(data_path + "Spine.nii.gz")
 data = img.get_fdata()
+
+# Save the modified segmentation as a NIfTI file
+modified_img = nib.Nifti1Image(final_image, img.affine, img.header)
+nib.save(modified_img, os.path.join(data_path, 'show_results.nii.gz'))
