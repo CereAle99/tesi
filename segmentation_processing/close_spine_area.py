@@ -33,4 +33,4 @@ final_image = dilate_spine(image, 3)
 
 # Save the modified segmentation as a NIfTI file
 modified_img = nib.Nifti1Image(final_image, img.affine, img.header)
-nib.save(modified_img, os.path.join(data_path, 'close_spine.nii.gz'))
+nib.save(modified_img, os.path.join(data_path, 'close_spine_iter=1.nii.gz'))
