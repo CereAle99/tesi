@@ -11,6 +11,7 @@ data_path = current_directory + '/data/'
 img = nib.load(data_path + "Spine.nii.gz")
 image = img.get_fdata()
 
+
 # Fill holes function
 
 def fill_spinal_holes(data, n_dilations=1, dim=3):
@@ -26,7 +27,7 @@ def fill_spinal_holes(data, n_dilations=1, dim=3):
     """
 
     kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
-    kernel[:, dim//2, :] = 1
+    kernel[:, dim // 2, :] = 1
 
     data = ndimage.binary_dilation(data, iterations=n_dilations)
     data = ndimage.binary_fill_holes(data, structure=kernel).astype(int)
@@ -37,7 +38,6 @@ def fill_spinal_holes(data, n_dilations=1, dim=3):
 
 # Fill the holes in the image
 final_image = fill_spinal_holes(image, 3)
-
 
 # Save the modified segmentation as a NIfTI file
 modified_img = nib.Nifti1Image(final_image, img.affine, img.header)
