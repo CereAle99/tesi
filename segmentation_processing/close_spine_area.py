@@ -29,7 +29,7 @@ def dilate_spine(data, iterations=1):
     return final_data
 
 
-final_image = fill_spinal_holes(image, 3)
+final_image = dilate_spine(image, 3)
 
 # Save the modified segmentation as a NIfTI file
 modified_img = nib.Nifti1Image(final_image, img.affine, img.header)
