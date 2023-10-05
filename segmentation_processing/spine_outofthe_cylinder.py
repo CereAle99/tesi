@@ -13,6 +13,15 @@ image = img.get_fdata()
 
 
 def spine_as_cylinder(data, close_spine=0):
+    """
+
+    Args:
+        data:
+        close_spine:
+
+    Returns:
+
+    """
 
     if close_spine != 0:
         data = dilate_spine(data, close_spine)
