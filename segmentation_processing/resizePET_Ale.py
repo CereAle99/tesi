@@ -10,7 +10,7 @@ if __name__=="__main__":
         try:
             print("Patient: ", folder)
             # Get label path
-            patient_path = os.path.join(path,folder)
+            patient_path = os.path.join(path, folder)
             image_path = os.path.join(patient_path, "PET/PT.nii")
 
             # Load label
