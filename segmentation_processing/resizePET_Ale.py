@@ -29,23 +29,27 @@ if __name__ == "__main__":
         # Modify file header and affine
         new_header = img_obj.header
         new_header['dim'] = [3, 512, 512, 239, 1, 1, 1, 1]
-        new_header['pixdim'] = [1.,
+        new_header['pixdim'] = [
+                                1.,
                                 5.46875/CT_PET_ratio[0],
                                 5.46875/CT_PET_ratio[1],
                                 3.27/CT_PET_ratio[2],
                                 0.,
                                 0.,
                                 0.,
-                                0.]
+                                0.
+                               ]
         new_header['srow_x'] = [-5.46875/CT_PET_ratio[0], 0., 0., 347.26562]
         new_header['srow_y'] = [0., -5.46875/CT_PET_ratio[1], 0., 347.26562]
         new_header['srow_z'] = [0., 0., 3.27/CT_PET_ratio[2], -771.7]
-        new_affine = np.array([
+        new_affine = np.array(
+                              [
                                 [-5.46875/CT_PET_ratio[0], 0., 0., 347.26562],
                                 [0., -5.46875/CT_PET_ratio[1], 0., 347.26562],
                                 [0., 0., 3.27/CT_PET_ratio[2], -771.7],
                                 [0., 0., 0., 1.]
-                            ])
+                              ]
+                             )
 
         img_resized = nib.Nifti1Image(img, new_affine, new_header)
         print("New header: \n", img_resized.header)
@@ -56,4 +60,3 @@ if __name__ == "__main__":
         if os.path.isfile(save_path + '/PT.nii'):
             print("Saving PET")
             nib.save(img_resized, save_path + '/PT.nii')
-
