@@ -5,12 +5,13 @@ import os
 
 if __name__ == "__main__":
     # All patients path
-    path = "data/test_PET"
+    current_directory = os.getcwd()
+    data_path = current_directory + '/data/test_PET'
 
-    for folder in os.listdir(path):
+    for folder in os.listdir(data_path):
         print("Patient: ", folder)
         # Get label path
-        patient_path = os.path.join(path, folder)
+        patient_path = os.path.join(data_path, folder)
         image_path = os.path.join(patient_path, "PT.nii")
 
         # Load label
@@ -60,3 +61,6 @@ if __name__ == "__main__":
         if os.path.isfile(save_path + '/PT.nii'):
             print("Saving PET")
             nib.save(img_resized, save_path + '/PT.nii')
+
+
+
