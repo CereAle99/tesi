@@ -14,18 +14,18 @@ image = img.get_fdata()
 
 # Fill holes function
 
-def fill_spinal_holes(data, n_dilations=1, dim=3):
+def fill_spinal_holes(input_data, n_dilations=1, dim=3):
     """
 
     Args:
-        data:
+        input_data:
         dim:
         n_dilations:
 
     Returns:
 
     """
-
+    data = input_data
     kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
     kernel[:, dim // 2, :] = 1
 

@@ -12,16 +12,18 @@ img = nib.load(data_path + "Spine.nii.gz")
 image = img.get_fdata()
 
 
-def spine_as_cylinder(data, close_spine=0):
+def spine_as_cylinder(input_data, close_spine=0):
     """
 
     Args:
-        data:
+        input_data:
         close_spine:
 
     Returns:
 
     """
+
+    data = input_data
 
     if close_spine != 0:
         data = dilate_spine(data, close_spine)

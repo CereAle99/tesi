@@ -13,17 +13,18 @@ img = nib.load(data_path + "Spine.nii.gz")
 image = img.get_fdata()
 
 
-def dilate_spine(data, iterations=1):
+def dilate_spine(input_data, iterations=1):
     """
 
     Args:
-        data:
+        input_data:
         iterations:
 
     Returns:
 
     """
 
+    data = input_data
     data = fill_spinal_holes(data, 3)
     final_data = ndimage.binary_dilation(data, iterations=iterations)
     return final_data
