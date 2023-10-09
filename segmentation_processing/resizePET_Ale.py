@@ -21,7 +21,7 @@ if __name__ == "__main__":
         print("Old header: \n", img_obj.header)
 
         # Evaluate the ratio of the images dimension
-        CT_PET_ratio = np.array([512, 512, 239]) / np.array(img.shape)
+        CT_PET_ratio = np.array([512, 512, 237]) / np.array(img.shape)
 
         # Transform label
         img = zoom(img, zoom=CT_PET_ratio)
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
         # Modify file header and affine
         new_header = img_obj.header
-        new_header['dim'] = [3, 512, 512, 239, 1, 1, 1, 1]
+        new_header['dim'] = [3, 512, 512, 237, 1, 1, 1, 1]
         new_header['pixdim'] = [
                                 1.,
                                 5.46875/CT_PET_ratio[0],
