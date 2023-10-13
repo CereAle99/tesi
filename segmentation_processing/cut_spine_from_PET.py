@@ -1,7 +1,7 @@
 import nibabel as nib
 import numpy as np
 import os
-from resizePET_Ale import pet_segmentation_make_compatible
+from resizePET_Ale import pet_ct_real_dim_compatible, pet_compatible_to_ct
 
 # Get the present directory path and data directory
 current_directory = os.getcwd()
@@ -49,6 +49,8 @@ def cut_spine_shape(input_image, mask):  # whether the dim are the same will be 
 # modified_img = nib.Nifti1Image(final_image, image_obj.affine, image_obj.header)
 # nib.save(modified_img, os.path.join(data_path, 'spine_PET.nii'))
 
-pet_image, ct_image = pet_segmentation_make_compatible(image_obj, spine, True)
-nib.save(pet_image, os.path.join(data_path, 'PET_compatibility.nii'))
-nib.save(ct_image, os.path.join(data_path, 'spine_compatibility.nii'))
+# pet_image, ct_image = pet_ct_real_dim_compatible(image_obj, spine, True)
+pet_image, ct_image = pet_compatible_to_ct(image_obj, spine, True)
+
+nib.save(pet_image, os.path.join(data_path, 'PET_resized_to_ct.nii'))
+nib.save(ct_image, os.path.join(data_path, 'spine_resized_to_pet.nii'))
