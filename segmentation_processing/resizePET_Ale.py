@@ -4,7 +4,7 @@ from scipy.ndimage import zoom
 import os
 
 
-def pet_segmentation_make_compatible(pet_nifti, ct_nifti, segmentation=False):
+def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation=False):
 
     # Load the nifti files header and image array
     pet_header = pet_nifti.header
@@ -13,10 +13,6 @@ def pet_segmentation_make_compatible(pet_nifti, ct_nifti, segmentation=False):
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
     ct_image = ct_nifti.get_fdata()
-    print(pet_header)
-    print(pet_affine)
-    print(ct_header)
-    print(ct_affine)
 
     # PET resizing ratio
     pixdim1 = np.array(pet_header['pixdim'][1:4])
@@ -38,34 +34,12 @@ def pet_segmentation_make_compatible(pet_nifti, ct_nifti, segmentation=False):
 
     # PET header fixing
     pet_header['dim'][1:4] = pet_image.shape
-    # pet_header['pixdim'][1] = pet_header['pixdim'][1] / pixdim1[0]
-    # pet_header['pixdim'][2] = pet_header['pixdim'][2] / pixdim1[1]
-    # pet_header['pixdim'][3] = pet_header['pixdim'][3] / pixdim1[2]
-    # ct_header['pixdim'][1] = ct_header['pixdim'][1] / pixdim2[0]
-    # ct_header['pixdim'][2] = ct_header['pixdim'][2] / pixdim2[1]
-    # ct_header['pixdim'][3] = ct_header['pixdim'][3] / pixdim2[2]
-    # pet_header['qoffset_x'] = 350
-    # pet_header['qoffset_y'] = 350
-    # ct_header['qoffset_x'] = 250
-    # ct_header['qoffset_y'] = 250
-    # pet_header['srow_x'][0] = 1
-    # pet_header['srow_y'][1] = 1
-    # pet_header['srow_z'][2] = 1
-    # pet_header['srow_x'][3] = pet_header['qoffset_x']
-    # pet_header['srow_y'][3] = pet_header['qoffset_y']
-    # pet_header['srow_z'][3] = pet_header['qoffset_z']
     pet_affine[0, 0] = -pet_header['pixdim'][1] / pixdim1[0]
     pet_affine[1, 1] = -pet_header['pixdim'][2] / pixdim1[1]
     pet_affine[2, 2] = pet_header['pixdim'][3] / pixdim1[2]
     pet_affine[0, 3] = pet_header['qoffset_x']
     pet_affine[1, 3] = pet_header['qoffset_y']
     pet_affine[2, 3] = pet_header['qoffset_z']
-    # ct_header['srow_x'][0] = 1
-    # ct_header['srow_y'][1] = 1
-    # ct_header['srow_z'][2] = 1
-    # ct_header['srow_x'][3] = pet_header['qoffset_x']
-    # ct_header['srow_y'][3] = pet_header['qoffset_y']
-    # ct_header['srow_z'][3] = pet_header['qoffset_z']
 
     # CT header fixing
     ct_header['dim'][1:4] = pet_image.shape
@@ -79,17 +53,11 @@ def pet_segmentation_make_compatible(pet_nifti, ct_nifti, segmentation=False):
     # CT image resizing
     ct_image_resized = np.zeros(shape=pet_image.shape)
     side_x = (pet_image.shape[0]-ct_image.shape[0])//2
-    print(side_x)
     side_y = (pet_image.shape[1]-ct_image.shape[1])//2
-    print(side_y)
     side_z = (pet_image.shape[2]-ct_image.shape[2])//2
-    print(side_z)
     center_x = ct_image.shape[0]
-    print(center_x)
     center_y = ct_image.shape[1]
-    print(center_y)
     center_z = ct_image.shape[2]
-    print(center_z)
     ct_image_resized[side_x-1:side_x+center_x-1, side_y-1:side_y+center_y-1, side_z:side_z+center_z] = ct_image
 
     if segmentation:
@@ -98,27 +66,81 @@ def pet_segmentation_make_compatible(pet_nifti, ct_nifti, segmentation=False):
         mask_01[mask_01 < 0] = 41
         ct_image_resized = mask_01
 
+    # CT and PET NIfTI files assembled
+    resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
+    resized_ct = nib.Nifti1Image(ct_image_resized, ct_affine, ct_header)
+    return resized_pet, resized_ct
 
 
-    # pad_width = (
-    #                 ((pet_npixels[0]-ct_npixels[0])//2,
-    #                  pet_npixels[0]-ct_npixels[0]-(pet_npixels[0]-ct_npixels[0])//2),
-    #                 ((pet_npixels[1]-ct_npixels[1])//2,
-    #                  pet_npixels[0]-ct_npixels[0]-(pet_npixels[1]-ct_npixels[1])//2),
-    #                 ((pet_npixels[2]-ct_npixels[2])//2,
-    #                  pet_npixels[0]-ct_npixels[0]-(pet_npixels[2]-ct_npixels[2])//2)
-    #             )
-    # ct_image_resized = np.pad(ct_image, pad_width=pad_width, mode='constant', constant_values=0)
-    # print(ct_image_resized.shape)
+def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation=False):
+
+    # Load the nifti files header and image array
+    pet_header = pet_nifti.header
+    ct_header = ct_nifti.header
+    pet_affine = pet_nifti.affine
+    ct_affine = ct_nifti.affine
+    pet_image = pet_nifti.get_fdata()
+    ct_image = ct_nifti.get_fdata()
+    print(pet_header)
+    print(ct_header)
+
+    # PET resize ratio
+    resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
+
+    # PET resizing and his displacement
+    pet_image = zoom(pet_image, zoom=resize_ratio)
+    rest = np.array(pet_image.shape) - np.array(pet_header['dim'][1:4]) * np.array(resize_ratio)
+    pixel_displacement = rest / np.array(pet_image.shape)
+    print(pixel_displacement)
+
+    # Managing the offset
+    pet_header['qoffset_x'] = (pet_header['qoffset_x']
+                               + (pet_header['pixdim'][1] / 2)
+                               - (pet_header['pixdim'][1] / resize_ratio[0]) / 2)
+    pet_header['qoffset_y'] = (pet_header['qoffset_y']
+                               + (pet_header['pixdim'][2] / 2)
+                               - (pet_header['pixdim'][2] / resize_ratio[1]) / 2)
+
+    # PET header fixing
+    pet_header['dim'][1:4] = pet_image.shape
+    pet_affine[0, 0] = -(pet_header['pixdim'][1] / resize_ratio[0] - pixel_displacement[0])
+    pet_affine[1, 1] = -(pet_header['pixdim'][2] / resize_ratio[1] - pixel_displacement[1])
+    pet_affine[2, 2] = (pet_header['pixdim'][3] / resize_ratio[2] - pixel_displacement[2])
+    pet_affine[0, 3] = pet_header['qoffset_x']
+    pet_affine[1, 3] = pet_header['qoffset_y']
+    pet_affine[2, 3] = pet_header['qoffset_z']
+
+    # CT header fixing
+    ct_header['dim'][1:4] = pet_image.shape
+    ct_affine[0, 0] = -(ct_header['pixdim'][1] - pixel_displacement[0])
+    ct_affine[1, 1] = -(ct_header['pixdim'][2] - pixel_displacement[1])
+    ct_affine[2, 2] = (ct_header['pixdim'][3] - pixel_displacement[2])
+    ct_affine[0, 3] = pet_header['qoffset_x']
+    ct_affine[1, 3] = pet_header['qoffset_y']
+    ct_affine[2, 3] = pet_header['qoffset_z']
+
+    # CT image resizing
+    ct_image_resized = np.zeros(shape=pet_image.shape)
+    side_x = (pet_image.shape[0]-ct_image.shape[0])//2
+    side_y = (pet_image.shape[1]-ct_image.shape[1])//2
+    side_z = (pet_image.shape[2]-ct_image.shape[2])//2
+    center_x = ct_image.shape[0]
+    center_y = ct_image.shape[1]
+    center_z = ct_image.shape[2]
+    ct_image_resized[side_x-1:side_x+center_x-1, side_y-1:side_y+center_y-1, side_z:side_z+center_z] = ct_image
+
+    if segmentation:
+        mask_01 = ct_image_resized
+        mask_01[mask_01 > 0] = 41
+        mask_01[mask_01 < 0] = 41
+        ct_image_resized = mask_01
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
     resized_ct = nib.Nifti1Image(ct_image_resized, ct_affine, ct_header)
     print(resized_pet.header)
-    print(resized_pet.affine)
-    print("ehi")
     print(resized_ct.header)
-    print(resized_ct.affine)
+
     return resized_pet, resized_ct
 
 
@@ -180,4 +202,3 @@ if __name__ == "__main__":
         if os.path.isfile(save_path + '/PT.nii'):
             print("Saving PET")
             nib.save(img_resized, save_path + '/PT.nii')
-
