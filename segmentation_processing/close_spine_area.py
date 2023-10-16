@@ -1,6 +1,5 @@
 import nibabel as nib
 from scipy import ndimage
-import numpy as np
 import os
 from fill_spine import fill_spinal_holes
 
