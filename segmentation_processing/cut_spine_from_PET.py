@@ -1,5 +1,4 @@
 import nibabel as nib
-import numpy as np
 import os
 from resizePET_Ale import pet_compatible_to_ct
 
