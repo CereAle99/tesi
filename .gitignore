@@ -9,3 +9,6 @@ clincal_data_300523.xlsx
 /.idea/shelf/Uncommitted_changes_before_Update_at_9_10_23_10_38__Changes_.xml
 /segmentation_processing/data/PET_resized_to_ct.nii
 /segmentation_processing/data/spine_resized_to_pet.nii
+/segmentation_processing/data/ct_resized_to_pet.nii
+/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
+/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml
