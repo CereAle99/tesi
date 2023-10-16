@@ -13,3 +13,5 @@ clincal_data_300523.xlsx
 /.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch
 /.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml
 /segmentation_processing/data/spine_PET.nii
+/segmentation_processing/data/close_spine_iter=3.nii.gz
+/segmentation_processing/data/show_results_n=3.nii.gz
