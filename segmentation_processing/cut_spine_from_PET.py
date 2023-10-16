@@ -1,7 +1,7 @@
 import nibabel as nib
 import numpy as np
 import os
-from resizePET_Ale import pet_ct_real_dim_compatible, pet_compatible_to_ct
+from resizePET_Ale import pet_compatible_to_ct
 
 # Get the present directory path and data directory
 current_directory = os.getcwd()
@@ -15,19 +15,20 @@ spine = nib.load(data_path + "Spine.nii.gz")
 image_obj = nib.load(image_path + "PT.nii")
 
 
-def cut_spine_shape(input_image, mask):  # whether the dim are the same will be treated when resize function is complete
+def cut_spine_shape(input_nifti, mask, segmentation_value=1):
     """
 
     Args:
-        input_image:
+        input_nifti:
         mask:
+        segmentation_value:
 
     Returns:
 
     """
 
     # Make PET image and spine segmentation image compatibles
-    resized_pet, resized_mask = pet_compatible_to_ct(input_image, mask, True)
+    resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask, segmentation_value)
 
     # Put the segmentation into a numpy array
     spine_mask = resized_mask.get_fdata()
@@ -35,11 +36,8 @@ def cut_spine_shape(input_image, mask):  # whether the dim are the same will be 
     # Put the image into a numpy array
     image = resized_pet.get_fdata()
 
-    # Make the mask binary and multiply it to the input image
-    mask_01 = spine_mask
-    mask_01[mask_01 != 41] = 0
-    mask_01[mask_01 == 41] = 1
-    cut_image = image * mask_01
+    # Cut the PET image
+    cut_image = image * spine_mask
 
     # Save cut image in a NIfTI file
     cut_file = nib.Nifti1Image(cut_image, resized_pet.affine, resized_pet.header)
