@@ -154,13 +154,13 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation=False):
 
     # CT image resizing
     ct_image_resized = np.zeros(shape=pet_image.shape)
-    side_x = (pet_image.shape[0]-ct_image.shape[0])//2
-    side_y = (pet_image.shape[1]-ct_image.shape[1])//2
-    side_z = (pet_image.shape[2]-ct_image.shape[2])//2
+    side_x = (pet_image.shape[0] - ct_image.shape[0]) // 2
+    side_y = (pet_image.shape[1] - ct_image.shape[1]) // 2
+    side_z = (pet_image.shape[2] - ct_image.shape[2]) // 2
     center_x = ct_image.shape[0]
     center_y = ct_image.shape[1]
     center_z = ct_image.shape[2]
-    ct_image_resized[side_x:side_x+center_x, side_y:side_y+center_y, side_z:side_z+center_z] = ct_image
+    ct_image_resized[side_x:side_x + center_x, side_y:side_y + center_y, side_z:side_z + center_z] = ct_image
 
     if segmentation:
         mask_01 = ct_image_resized
