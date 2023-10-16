@@ -3,8 +3,19 @@ import nibabel as nib
 from scipy.ndimage import zoom
 import os
 
+# Get the present directory path and data directory
+current_directory = os.getcwd()
+data_path = current_directory + '/data/'
+image_path = data_path + 'test_PET/MPC_2_20110413/'
 
-def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation=False):
+# Load the segmentation NIfTI file
+spine = nib.load(data_path + "close_spine_iter=3.nii.gz")
+
+# Load the segmentation NIfTI file
+image_obj = nib.load(image_path + "PT.nii")
+
+
+def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation_value=0):
     """
 
     Args:
