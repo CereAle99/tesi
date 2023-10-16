@@ -14,7 +14,7 @@ image = img.get_fdata()
 
 # Fill holes function
 
-def fill_spinal_holes(input_data, n_dilations=1, dim=3):
+def fill_spinal_holes(input_data, n_dilations=3, dim=3):
     """
 
     Args:

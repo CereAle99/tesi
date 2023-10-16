@@ -13,7 +13,7 @@ img = nib.load(data_path + "Spine.nii.gz")
 image = img.get_fdata()
 
 
-def dilate_spine(input_data, iterations=1):
+def dilate_spine(input_data, iterations=3):
     """
 
     Args:
