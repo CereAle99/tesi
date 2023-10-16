@@ -9,7 +9,7 @@ data_path = current_directory + '/data/'
 image_path = data_path + 'test_PET/MPC_2_20110413/'
 
 # Load the segmentation NIfTI file
-spine = nib.load(data_path + "Spine.nii.gz")
+ct = nib.load(image_path + "CT.nii")
 
 # Load the segmentation NIfTI file
 image_obj = nib.load(image_path + "PT.nii")
@@ -50,7 +50,7 @@ def cut_spine_shape(input_image, mask):  # whether the dim are the same will be 
 # nib.save(modified_img, os.path.join(data_path, 'spine_PET.nii'))
 
 # pet_image, ct_image = pet_ct_real_dim_compatible(image_obj, spine, True)
-pet_image, ct_image = pet_compatible_to_ct(image_obj, spine, True)
+pet_image, ct_image = pet_compatible_to_ct(image_obj, ct, False)
 
 nib.save(pet_image, os.path.join(data_path, 'PET_resized_to_ct.nii'))
-nib.save(ct_image, os.path.join(data_path, 'spine_resized_to_pet.nii'))
+nib.save(ct_image, os.path.join(data_path, 'ct_resized_to_pet.nii'))
