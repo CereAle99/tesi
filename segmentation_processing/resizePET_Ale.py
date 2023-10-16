@@ -5,6 +5,16 @@ import os
 
 
 def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation=False):
+    """
+
+    Args:
+        pet_nifti:
+        ct_nifti:
+        segmentation:
+
+    Returns:
+
+    """
 
     # Load the nifti files header and image array
     pet_header = pet_nifti.header
@@ -73,6 +83,16 @@ def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation=False):
 
 
 def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation=False):
+    """
+
+    Args:
+        pet_nifti:
+        ct_nifti:
+        segmentation:
+
+    Returns:
+
+    """
 
     # Load the nifti files header and image array
     pet_header = pet_nifti.header
