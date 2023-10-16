@@ -8,30 +8,36 @@ from fill_spine import fill_spinal_holes
 current_directory = os.getcwd()
 data_path = current_directory + '/data/'
 
-# Load the NIfTI segmentation and put it into a numpy array
-img = nib.load(data_path + "Spine.nii.gz")
-image = img.get_fdata()
+# Load the NIfTI segmentation
+original_file = nib.load(data_path + "Spine.nii.gz")
 
 
-def dilate_spine(input_data, iterations=3):
+def dilate_spine(input_nifti, iterations=3, fill=False):
     """
 
     Args:
-        input_data:
+        input_nifti:
         iterations:
+        fill:
 
     Returns:
 
     """
+    if fill:
+        fill_nifti = fill_spinal_holes(input_nifti, 3)
+    else:
+        fill_nifti = input_nifti
 
-    data = input_data
-    data = fill_spinal_holes(data, 3)
-    final_data = ndimage.binary_dilation(data, iterations=iterations)
-    return final_data
+    image = fill_nifti.get_fdata()
+    final_image = ndimage.binary_dilation(image, iterations=iterations)
+
+    # Put the image in a NIfTI file
+    final_nifti = nib.Nifti1Image(final_image, input_nifti.affine, input_nifti.header)
+
+    return final_nifti
 
 
-final_image = dilate_spine(image, 3)
+modified_file = dilate_spine(original_file, 3, True)
 
 # Save the modified segmentation as a NIfTI file
-modified_img = nib.Nifti1Image(final_image, img.affine, img.header)
-nib.save(modified_img, os.path.join(data_path, 'close_spine_iter=1.nii.gz'))
+nib.save(modified_file, os.path.join(data_path, 'close_spine_iter=3.nii.gz'))
