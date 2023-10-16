@@ -21,7 +21,7 @@ def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation_value=0):
     Args:
         pet_nifti:
         ct_nifti:
-        segmentation:
+        segmentation_value:
 
     Returns:
 
@@ -83,11 +83,9 @@ def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation_value=0):
                      side_y - 1:side_y + center_y - 1,
                      side_z:side_z + center_z] = ct_image
 
-    if segmentation:
-        mask_01 = ct_image_resized
-        mask_01[mask_01 > 0] = 41
-        mask_01[mask_01 < 0] = 41
-        ct_image_resized = mask_01
+    if segmentation_value:
+        ct_image_resized[ct_image_resized != segmentation_value] = 0
+        ct_image_resized[ct_image_resized == segmentation_value] = 1
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
@@ -95,13 +93,13 @@ def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation_value=0):
     return resized_pet, resized_ct
 
 
-def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation=False):
+def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation_value=0):
     """
 
     Args:
         pet_nifti:
         ct_nifti:
-        segmentation:
+        segmentation_value:
 
     Returns:
 
@@ -162,11 +160,11 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation=False):
     center_z = ct_image.shape[2]
     ct_image_resized[side_x:side_x + center_x, side_y:side_y + center_y, side_z:side_z + center_z] = ct_image
 
-    if segmentation:
-        mask_01 = ct_image_resized
-        mask_01[mask_01 > 0] = 41
-        mask_01[mask_01 < 0] = 41
-        ct_image_resized = mask_01
+    if segmentation_value == 1:
+        pass
+    elif segmentation_value:
+        ct_image_resized[ct_image_resized != segmentation_value] = 0
+        ct_image_resized[ct_image_resized == segmentation_value] = 1
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
