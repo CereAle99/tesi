@@ -112,8 +112,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation_value=0):
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
     ct_image = ct_nifti.get_fdata()
-    print(pet_header)
-    print(ct_header)
 
     # PET resize ratio
     resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
@@ -122,7 +120,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation_value=0):
     pet_image = zoom(pet_image, zoom=resize_ratio)
     rest = np.array(pet_image.shape) - np.array(pet_header['dim'][1:4]) * np.array(resize_ratio)
     pixel_displacement = rest / np.array(pet_image.shape)
-    print(pixel_displacement)
 
     # Managing the offset
     pet_header['qoffset_x'] = (pet_header['qoffset_x']
@@ -169,8 +166,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti, segmentation_value=0):
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
     resized_ct = nib.Nifti1Image(ct_image_resized, ct_affine, ct_header)
-    print(resized_pet.header)
-    print(resized_ct.header)
 
     return resized_pet, resized_ct
 
