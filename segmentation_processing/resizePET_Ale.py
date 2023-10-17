@@ -1,20 +1,6 @@
 import numpy as np
 import nibabel as nib
 from scipy.ndimage import zoom
-import os
-
-# Get the present directory path and data directory
-current_directory = os.getcwd()
-data_path = current_directory + '/data/'
-image_path = data_path + 'test_PET/MPC_300_20190104/'
-# image_path = data_path + 'test_PET/MPC_2_20110413/'
-
-# Load the segmentation NIfTI file
-spine = nib.load(data_path + "binarized_bone.nii.gz")
-# spine = nib.load(data_path + "Spine.nii.gz")
-
-# Load the segmentation NIfTI file
-image_obj = nib.load(image_path + "PT.nii")
 
 
 def pet_ct_real_dim_compatible(pet_nifti, ct_nifti):
@@ -108,7 +94,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
     ct_image = ct_nifti.get_fdata()
-    print(pet_header, ct_header)
 
     # PET resize ratio
     resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
@@ -160,13 +145,4 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
     resized_ct = nib.Nifti1Image(ct_image_resized, ct_affine, ct_header)
-    print(pet_header, "\n", ct_header, "\n", pet_affine, "\n", ct_affine)
     return resized_pet, resized_ct
-
-
-# Make the two images compatibles
-final_pet, final_ct = pet_compatible_to_ct(image_obj, spine)
-
-# Save the modified files as a NIfTI file
-nib.save(final_pet, os.path.join(data_path, 'pet_compatible.nii'))
-nib.save(final_ct, os.path.join(data_path, 'spine_compatible.nii'))
