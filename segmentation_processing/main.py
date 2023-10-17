@@ -8,9 +8,8 @@ if __name__ == "__main__":
                    "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_1")
     moose_path2 = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
                    "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_2")
-    patient_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                    "volume=Genomed/Genomed4All_Data/MultipleMieloma/PET-CT")
-    label_folder = "labels/sim_space/similarity-space"
+    data_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
+                 "volume=Genomed/Genomed4All_Data/MultipleMieloma/PET-CT")
 
     # Get saving directory path
     save_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
