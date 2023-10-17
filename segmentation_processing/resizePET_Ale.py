@@ -6,22 +6,23 @@ import os
 # Get the present directory path and data directory
 current_directory = os.getcwd()
 data_path = current_directory + '/data/'
-image_path = data_path + 'test_PET/MPC_2_20110413/'
+image_path = data_path + 'test_PET/MPC_285_20160209/'
+# image_path = data_path + 'test_PET/MPC_2_20110413/'
 
 # Load the segmentation NIfTI file
-spine = nib.load(data_path + "close_spine_iter=3.nii.gz")
+spine = nib.load(data_path + "binarized_bone.nii.gz")
+# spine = nib.load(data_path + "Spine.nii.gz")
 
 # Load the segmentation NIfTI file
 image_obj = nib.load(image_path + "PT.nii")
 
 
-def pet_ct_real_dim_compatible(pet_nifti, ct_nifti, segmentation_value=0):
+def pet_ct_real_dim_compatible(pet_nifti, ct_nifti):
     """
 
     Args:
         pet_nifti:
         ct_nifti:
-        segmentation_value:
 
     Returns:
 
@@ -95,7 +96,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     Args:
         pet_nifti:
         ct_nifti:
-        segmentation:
 
     Returns:
 
@@ -108,6 +108,7 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
     ct_image = ct_nifti.get_fdata()
+    print(pet_header, ct_header)
 
     # PET resize ratio
     resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
@@ -117,6 +118,16 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     rest = np.array(pet_image.shape) - np.array(pet_header['dim'][1:4]) * np.array(resize_ratio)
     pixel_displacement = rest / np.array(pet_image.shape)
 
+    # CT image resizing
+    ct_image_resized = np.zeros(shape=pet_image.shape)
+    side_x = (pet_image.shape[0] - ct_image.shape[0]) // 2
+    side_y = (pet_image.shape[1] - ct_image.shape[1]) // 2
+    side_z = (pet_image.shape[2] - ct_image.shape[2]) // 2
+    center_x = ct_image.shape[0]
+    center_y = ct_image.shape[1]
+    center_z = ct_image.shape[2]
+    ct_image_resized[side_x:side_x + center_x, side_y:side_y + center_y, side_z:side_z + center_z] = ct_image
+
     # Managing the offset
     pet_header['qoffset_x'] = (pet_header['qoffset_x']
                                + (pet_header['pixdim'][1] / 2)
@@ -124,6 +135,9 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     pet_header['qoffset_y'] = (pet_header['qoffset_y']
                                + (pet_header['pixdim'][2] / 2)
                                - (pet_header['pixdim'][2] / resize_ratio[1]) / 2)
+    pet_header['qoffset_z'] = (pet_header['qoffset_z']
+                               + (pet_header['pixdim'][3] / 2)
+                               - (pet_header['pixdim'][3] / resize_ratio[2]) / 2)
 
     # PET header fixing
     pet_header['dim'][1:4] = pet_image.shape
@@ -146,13 +160,13 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
     resized_ct = nib.Nifti1Image(ct_image_resized, ct_affine, ct_header)
-
+    print(pet_header, "\n", ct_header, "\n", pet_affine, "\n", ct_affine)
     return resized_pet, resized_ct
 
 
 # Make the two images compatibles
-final_pet, final_ct = pet_compatible_to_ct(image_obj, spine, 1)
+final_pet, final_ct = pet_compatible_to_ct(image_obj, spine)
 
 # Save the modified files as a NIfTI file
 nib.save(final_pet, os.path.join(data_path, 'pet_compatible.nii'))
-nib.save(final_ct, os.path.join(data_path, 'spine_compatible_1.nii'))
+nib.save(final_ct, os.path.join(data_path, 'spine_compatible.nii'))
