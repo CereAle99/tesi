@@ -1,6 +1,10 @@
 import nibabel as nib
 import os
 from resizePET_Ale import pet_compatible_to_ct
+from fill_spine import fill_spinal_holes
+from close_spine_area import dilate_spine
+from spine_outofthe_cylinder import spine_as_cylinder
+from binarize import binarize
 
 # Get the present directory path and data directory
 current_directory = os.getcwd()
@@ -14,20 +18,33 @@ spine = nib.load(data_path + "Spine.nii.gz")
 image_obj = nib.load(image_path + "PT.nii")
 
 
-def cut_spine_shape(input_nifti, mask, segmentation_value=1):
+def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41):
     """
 
     Args:
         input_nifti:
         mask:
+        shape:
         segmentation_value:
 
     Returns:
 
     """
 
+    # Apply shape function on segmentation
+    if shape == "fill_holes":
+        mask = fill_spinal_holes(mask, 3, 3)
+    elif shape == "close_spine":
+        mask = dilate_spine(mask, 3, True)
+    elif shape == "cylinder":
+        mask = spine_as_cylinder(mask, 3)
+    elif shape == "original":
+        mask = binarize(mask, segmentation_value)
+    else:
+        print("Shape invalid. Going with the original shape.")
+
     # Make PET image and spine segmentation image compatibles
-    resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask, segmentation_value)
+    resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask)
 
     # Put the segmentation into a numpy array
     spine_mask = resized_mask.get_fdata()
@@ -45,7 +62,7 @@ def cut_spine_shape(input_nifti, mask, segmentation_value=1):
 
 
 # Cut the image
-final_image = cut_spine_shape(image_obj, spine)
+final_image = crop_spine_shape(image_obj, spine)
 
 # Save the modified segmentation as a NIfTI file
 nib.save(final_image, os.path.join(data_path, 'spine_PET.nii'))
