@@ -12,7 +12,7 @@ data_path = current_directory + '/data/'
 image_path = data_path + 'test_PET/MPC_2_20110413/'
 
 # Load the segmentation NIfTI file
-spine = nib.load(data_path + "Spine.nii.gz")
+spine = nib.load(data_path + "CT_Bones_V1_CT_0000.nii.gz")
 
 # Load the segmentation NIfTI file
 image_obj = nib.load(image_path + "PT.nii")
@@ -66,7 +66,7 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
 
 
 # Cut the image
-final_image = crop_spine_shape(image_obj, spine, "dilation", 41)
+final_image = crop_spine_shape(image_obj, spine, "dilation", 15)
 
 # Save the modified segmentation as a NIfTI file
 nib.save(final_image, os.path.join(data_path, 'spine_PET.nii'))

@@ -6,7 +6,7 @@ import os
 # Get the present directory path and data directory
 current_directory = os.getcwd()
 data_path = current_directory + '/data/'
-image_path = data_path + 'test_PET/MPC_285_20160209/'
+image_path = data_path + 'test_PET/MPC_300_20190104/'
 # image_path = data_path + 'test_PET/MPC_2_20110413/'
 
 # Load the segmentation NIfTI file
