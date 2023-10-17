@@ -9,7 +9,7 @@ from binarize import binarize
 # Get the present directory path and data directory
 current_directory = os.getcwd()
 data_path = current_directory + '/data/'
-image_path = data_path + 'test_PET/MPC_2_20110413/'
+image_path = data_path + 'test_PET/MPC_300_20190104/'
 
 # Load the segmentation NIfTI file
 spine = nib.load(data_path + "CT_Bones_V1_CT_0000.nii.gz")
