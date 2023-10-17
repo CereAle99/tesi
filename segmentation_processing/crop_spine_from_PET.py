@@ -33,15 +33,19 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
 
     # Apply shape function on segmentation
     if shape == "fill_holes":
+        mask = binarize(mask, segmentation_value)
         mask = fill_spinal_holes(mask, 3, 3)
-    elif shape == "close_spine":
+    elif shape == "dilation":
+        mask = binarize(mask, segmentation_value)
         mask = dilate_spine(mask, 3, True)
     elif shape == "cylinder":
+        mask = binarize(mask, segmentation_value)
         mask = spine_as_cylinder(mask, 3)
     elif shape == "original":
         mask = binarize(mask, segmentation_value)
     else:
         print("Shape invalid. Going with the original shape.")
+        mask = binarize(mask, segmentation_value)
 
     # Make PET image and spine segmentation image compatibles
     resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask)
@@ -62,7 +66,7 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
 
 
 # Cut the image
-final_image = crop_spine_shape(image_obj, spine)
+final_image = crop_spine_shape(image_obj, spine, "dilation", 41)
 
 # Save the modified segmentation as a NIfTI file
 nib.save(final_image, os.path.join(data_path, 'spine_PET.nii'))
