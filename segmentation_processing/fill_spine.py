@@ -1,14 +1,6 @@
 import nibabel as nib
 from scipy import ndimage
 import numpy as np
-import os
-
-# Get the present directory path and data directory
-current_directory = os.getcwd()
-data_path = current_directory + '/data/'
-
-# Load the NIfTI segmentation and put it into a numpy array
-original_file = nib.load(data_path + "Spine.nii.gz")
 
 
 # Fill holes function
@@ -36,10 +28,3 @@ def fill_spinal_holes(input_nifti, n_dilations=3, dim=3):
     final_nifti = nib.Nifti1Image(final_image, input_nifti.affine, input_nifti.header)
 
     return final_nifti
-
-
-# Fill the holes in the image
-modified_file = fill_spinal_holes(original_file, 3)
-
-# Save the modified segmentation as a NIfTI file
-nib.save(modified_file, os.path.join(data_path, 'show_results_n=3.nii.gz'))
