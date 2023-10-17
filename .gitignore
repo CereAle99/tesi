@@ -18,3 +18,5 @@ clincal_data_300523.xlsx
 /segmentation_processing/data/pet_compatible.nii
 /segmentation_processing/data/spine_compatible.nii
 /segmentation_processing/data/spine_compatible_1.nii
+/segmentation_processing/data/CT_Bones_V1_CT_0000.nii.gz
+/segmentation_processing/data/binarized_bone.nii.gz
