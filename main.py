@@ -5,6 +5,7 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 
 if __name__ == "__main__":
     # All patients path
+    current_path = os.getcwd()
     moose_path1 = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
                    "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_1")
     moose_path2 = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
@@ -42,7 +43,9 @@ if __name__ == "__main__":
                                            mask=segmentation_file,
                                            shape=function,
                                            segmentation_value=41)
-                nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_" + function + ".nii"))
+                save_dir = os.path.join(save_path, patient_id)
+                os.makedirs(save_dir, exist_ok=True)
+                nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
                 print("Saved: ", "PT_" + function + ".nii")
 
             # Limit the loops
@@ -53,19 +56,19 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("/log/cropping_report.txt", "a") as file:
+            with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: FileNotFoundError\n")
 
         except StopIteration:
             print("StopIteration for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("/log/cropping_report.txt", "a") as file:
+            with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: StopIteration\n")
 
         except Exception as e:
             print(f"Unknown error ({e}) for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("/log/cropping_report.txt", "a") as file:
+            with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")
 
     # # For each patient in folder moose_2
@@ -87,4 +90,6 @@ if __name__ == "__main__":
     #                                    mask=segmentation_file,
     #                                    shape=function,
     #                                    segmentation_value=15)
-    #         nib.save(cut_pet, os.path.join(data_path, patient_id, 'PT_' + function + ".nii"))
+    #         save_dir = os.path.join(save_path, patient_id)
+    #         os.makedirs(save_dir, exist_ok=True)
+    #         nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
