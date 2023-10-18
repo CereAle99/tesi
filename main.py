@@ -11,29 +11,62 @@ if __name__ == "__main__":
                    "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_2")
     data_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
                  "volume=Genomed/Genomed4All_Data/MultipleMieloma/PET-CT")
+    save_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
+                 "volume=Genomed/Genomed4All_Data/MultipleMieloma/spine_PET")
 
     # PET cropping functions
     shapes = ["original", "fill_holes", "dilation", "cylinder"]
 
+    # Define an iteration index and loop limit
+    i = 0
+    max_loops = 4
+
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
-        # Get label and PET path
-        label_folder = "labels/sim_space/similarity-space"
-        patient_path = os.path.join(moose_path1, patient_id)
-        label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
-        pet_path = os.path.join(data_path, patient_id, "PT.nii")
-        # Load label
-        segmentation_file = nib.load(label_path)
-        pet_file = nib.load(pet_path)
-        # Shape the PET image
-        for function in shapes:
-            cut_pet = crop_spine_shape(input_nifti=pet_file,
-                                       mask=segmentation_file,
-                                       shape=function,
-                                       segmentation_value=41)
-            nib.save(cut_pet, os.path.join(data_path, patient_id, "PT_" + function + ".nii"))
-            print("Saved: ", "PT_" + function + ".nii")
+
+        try:
+            # Get label and PET path
+            label_folder = "labels/sim_space/similarity-space"
+            patient_path = os.path.join(moose_path1, patient_id)
+            label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
+            pet_path = os.path.join(data_path, patient_id, "PT.nii")
+
+            # Load label
+            segmentation_file = nib.load(label_path)
+            pet_file = nib.load(pet_path)
+
+            # Shape the PET image
+            for function in shapes:
+                cut_pet = crop_spine_shape(input_nifti=pet_file,
+                                           mask=segmentation_file,
+                                           shape=function,
+                                           segmentation_value=41)
+                nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_" + function + ".nii"))
+                print("Saved: ", "PT_" + function + ".nii")
+
+            # Limit the loops
+            if i == max_loops:
+                break
+            i += 1
+
+        except FileNotFoundError:
+            print("FileNotFoundError for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open("cropping_error.txt", "w") as file:
+                file.write(f"{patient_id}: FileNotFoundError\n")
+
+        except StopIteration:
+            print("StopIteration for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open("cropping_error.txt", "w") as file:
+                file.write(f"{patient_id}: StopIteration\n")
+
+        except Exception as e:
+            print(f"Unknown error ({e}) for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open("cropping_error.txt", "w") as file:
+                file.write(f"{patient_id}: Unknown error ({e})\n")
 
     # # For each patient in folder moose_2
     # for patient_id in os.listdir(moose_path2):
