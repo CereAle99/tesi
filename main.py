@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # Define an iteration index and loop limit
     i = 0
-    max_loops = 1
+    max_loops = 4
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
@@ -35,13 +35,18 @@ if __name__ == "__main__":
 
             # Shape the PET image
             for function in shapes:
-                # Load label
+
+                # Load label and PET
                 segmentation_file = nib.load(label_path)
                 pet_file = nib.load(pet_path)
+
+                # Perform the cropping
                 cut_pet = crop_spine_shape(input_nifti=pet_file,
                                            mask=segmentation_file,
                                            shape=function,
                                            segmentation_value=41)
+
+                # Save cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
                 nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
@@ -73,22 +78,56 @@ if __name__ == "__main__":
     # # For each patient in folder moose_2
     # for patient_id in os.listdir(moose_path2):
     #     print("Patient: ", patient_id)
-    #     # Get PET path
-    #     patient_path = os.path.join(moose_path2, patient_id)
-    #     pet_path = os.path.join(data_path, patient_id, "PT.nii")
-    #     # Find the label folder for moose 2.0
-    #     start_seq = "moosez"
-    #     label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
-    #     label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
-    #     # Shape the PET image
-    #     for function in shapes:
-    #         # Load label
-    #         segmentation_file = nib.load(label_path)
-    #         pet_file = nib.load(pet_path)
-    #         cut_pet = crop_spine_shape(input_nifti=pet_file,
-    #                                    mask=segmentation_file,
-    #                                    shape=function,
-    #                                    segmentation_value=15)
-    #         save_dir = os.path.join(save_path, patient_id)
-    #         os.makedirs(save_dir, exist_ok=True)
-    #         nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
+    #
+    #     try:
+    #
+    #         # Get PET path
+    #         patient_path = os.path.join(moose_path2, patient_id)
+    #         pet_path = os.path.join(data_path, patient_id, "PT.nii")
+    #
+    #         # Find the label folder for moose 2.0
+    #         start_seq = "moosez"
+    #         label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
+    #         label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+    #
+    #         # Shape the PET image
+    #         for function in shapes:
+    #
+    #             # Load label
+    #             segmentation_file = nib.load(label_path)
+    #             pet_file = nib.load(pet_path)
+    #
+    #             # Perform the cropping
+    #             cut_pet = crop_spine_shape(input_nifti=pet_file,
+    #                                        mask=segmentation_file,
+    #                                        shape=function,
+    #                                        segmentation_value=15)
+    #
+    #             # Saved cropped PET
+    #             save_dir = os.path.join(save_path, patient_id)
+    #             os.makedirs(save_dir, exist_ok=True)
+    #             nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
+    #
+    #         # Limit the loops
+    #         if i == max_loops:
+    #             break
+    #         i += 1
+    #
+    #     except FileNotFoundError:
+    #         print("FileNotFoundError for patient: ", patient_id)
+    #         # Write the patient id which had an error
+    #         with open(current_path + "/log/cropping_report.txt", "a") as file:
+    #             file.write(f"{patient_id}: FileNotFoundError\n")
+    #
+    #     except StopIteration:
+    #         print("StopIteration for patient: ", patient_id)
+    #         # Write the patient id which had an error
+    #         with open(current_path + "/log/cropping_report.txt", "a") as file:
+    #             file.write(f"{patient_id}: StopIteration\n")
+    #
+    #     except Exception as e:
+    #         print(f"Unknown error ({e}) for patient: ", patient_id)
+    #         # Write the patient id which had an error
+    #         with open(current_path + "/log/cropping_report.txt", "a") as file:
+    #             file.write(f"{patient_id}: Unknown error ({e})\n")
+    #
