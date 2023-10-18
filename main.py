@@ -4,6 +4,7 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 
 
 if __name__ == "__main__":
+
     # All patients path
     current_path = os.getcwd()
     shared_dir_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
