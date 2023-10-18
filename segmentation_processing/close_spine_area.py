@@ -1,6 +1,6 @@
 import nibabel as nib
 from scipy import ndimage
-from fill_spine import fill_spinal_holes
+from segmentation_processing.fill_spine import fill_spinal_holes
 
 
 def dilate_spine(input_nifti, iterations=3, fill=False):

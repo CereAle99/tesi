@@ -1,6 +1,6 @@
 import nibabel as nib
 import numpy as np
-from close_spine_area import dilate_spine
+from segmentation_processing.close_spine_area import dilate_spine
 
 
 def spine_as_cylinder(input_nifti, close_spine=3):
