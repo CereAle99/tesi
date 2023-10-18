@@ -53,19 +53,19 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("cropping_error.txt", "w") as file:
+            with open("/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: FileNotFoundError\n")
 
         except StopIteration:
             print("StopIteration for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("cropping_error.txt", "w") as file:
+            with open("/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: StopIteration\n")
 
         except Exception as e:
             print(f"Unknown error ({e}) for patient: ", patient_id)
             # Write the patient id which had an error
-            with open("cropping_error.txt", "w") as file:
+            with open("/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")
 
     # # For each patient in folder moose_2
