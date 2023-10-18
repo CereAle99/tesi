@@ -455,6 +455,7 @@ def drop_columns_with_nan(dataframes_dict, print_output=True):
 # Call the function with your dataframes_transposed
 dataframes = drop_columns_with_nan(dataframes, print_output=True)
 
+
 def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_output=True, plot_heatmap=False):
     """
     Processes a dictionary of DataFrames to remove features that are highly correlated with other features.
@@ -489,7 +490,7 @@ def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_out
         corr_matrix = df6.corr().abs()
 
         # Create a mask to identify highly correlated features
-        upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
+        upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
         to_drop = [column for column in upper.columns if any(upper[column] > threshold)]
 
         # Plot the heatmap if required
