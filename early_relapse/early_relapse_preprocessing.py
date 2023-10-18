@@ -330,4 +330,196 @@ plt.tight_layout()
 plt.show()
 
 
+def filter_low_variance_features(dataframes_dict, thresholds=0.001, default_threshold=0.01, print_output=True):
+    """
+    Processes a dictionary of DataFrames to remove features (columns) that have a variance below a specified threshold.
+    The function is useful for feature selection, especially in contexts where features with low variance might not
+    contribute significantly to a model.
 
+    Parameters:
+      - dataframes_dict (dict): A dictionary where keys are strings representing the names
+      (or types) of DataFrames, and values are the corresponding pandas DataFrames.
+      - thresholds (float, int, or dict, optional): The variance threshold below which features will be removed.
+        It can be:
+                    A single float or int value applied to all DataFrames.
+                    A dictionary with keys corresponding to the keys in dataframes_dict and values being the thresholds
+                    for each DataFrame. Default is 0.001.
+      - default_threshold (float, optional): The default variance threshold to use for any DataFrame not specified in
+        the threshold's dictionary. Default is 0.01.
+      - print_output (bool, optional): If set to True (default), the function will print the shape of each DataFrame
+      after filtering and the names of the dropped features. If set to False, no output will be printed.
+
+    Returns:
+      - tuple: A tuple containing two items:
+            filtered_dataframes_dict (dict): The input dictionary with low variance features removed from
+            each DataFrame.
+            dropped_features (dict): A dictionary where keys are the same as the input dictionary,
+            and values are lists of feature names that were dropped due to low variance.
+    """
+    dropped_features = {}
+
+    # Make a copy of the dataframes_dict to avoid modifying the original
+    filtered_dataframes_dict = dataframes_dict.copy()
+
+    if isinstance(thresholds, (float, int)):
+        thresholds = {omic: thresholds for omic in dataframes_dict.keys()}
+
+    for omic, df4 in filtered_dataframes_dict.items():
+        threshold1 = thresholds.get(omic, default_threshold)
+
+        selector = VarianceThreshold(threshold=threshold1)
+        selected_data = selector.fit_transform(df4)
+        dropped_indices = ~selector.get_support()
+        dropped_feature_names = df4.columns[dropped_indices]
+        dropped_features[omic] = dropped_feature_names
+
+        df_selected = pd.DataFrame(selected_data, index=df4.index, columns=df4.columns[selector.get_support()])
+        filtered_dataframes_dict[omic] = df_selected
+
+        num_dropped = len(dropped_feature_names)
+
+        if print_output:
+            print(f"{omic} after removing low variance features: {df_selected.shape}")
+            print(f"Number of features dropped in {omic}: {num_dropped}")
+            if num_dropped > 0:
+                print(f"Features dropped in {omic}: {', '.join(dropped_feature_names)}\n")
+
+    return filtered_dataframes_dict, dropped_features
+
+
+# Example usage with different thresholds for each omic type and a default threshold of 0.03
+# thresholds = {'CLI': 0.01, 'T2': 0.0001,'T1': 0.0001,'T1Gd': 0.0001,'FLAIR': 0.0001}
+# default_threshold = 0.01
+dataframes, uninformative_features = filter_low_variance_features(dataframes, default_threshold=0.01, print_output=True)
+
+# Dealing with missing values and highly correlated features
+
+# Calculate NA ratios per sample for each omics
+na_ratios_per_sample = {omic: df.isna().sum() / df.shape[0] for omic, df in dataframes.items()}
+
+# Create a plot for each omics
+fig, axes = plt.subplots(len(dataframes), figsize=(12, 3 * len(dataframes)))
+
+for i, (omic, na_ratios) in enumerate(na_ratios_per_sample.items()):
+    ax = axes[i]
+    sns.barplot(
+        x=np.arange(0, na_ratios.shape[0]),
+        y=na_ratios.values,
+        ax=ax
+    )
+    ax.set_xlabel('Sample')
+    ax.set_ylabel('Ratio of NAs')
+    ax.set_title(f'NA Ratios per Sample - {omic}')
+
+plt.tight_layout()
+plt.show()
+
+
+def drop_columns_with_nan(dataframes_dict, print_output=True):
+    """
+    Processes a dictionary of DataFrames to remove columns that contain any NaN values.
+    This can be particularly useful in data preprocessing where features with missing values
+    need to be excluded from analyses or models.
+
+    Parameters:
+    - dataframes_dict (dict): A dictionary where keys are strings representing the names (or types) of DataFrames,
+                              and values are the corresponding pandas DataFrames.
+
+    - print_output (bool, optional): If set to True (default), the function will print the shape of each DataFrame
+                                    after columns with NaN values have been dropped, as well as the names of the removed
+                                     columns. If set to False, no output will be printed.
+
+    Returns:
+    - new_dataframes_dict (dict): The input dictionary with columns containing NaN values removed from each DataFrame.
+    """
+    new_dataframes_dict = {}
+    removed_features = {}
+    for omic, df5 in dataframes_dict.items():
+        # Identify columns with NaN values
+        nan_columns = df5.columns[df5.isna().any()].tolist()
+
+        # Drop columns with NaN values
+        new_df = df5.dropna(axis=1, how='any')
+
+        # Store removed features
+        removed_features[omic] = nan_columns
+
+        new_dataframes_dict[omic] = new_df
+        if print_output:
+            print(f"{omic.upper()} shape after dropping columns with NaN values: {new_df.shape}")
+            if nan_columns:
+                print(f"Features removed in {omic}: {', '.join(nan_columns)}")
+    return new_dataframes_dict
+
+
+# Call the function with your dataframes_transposed
+dataframes = drop_columns_with_nan(dataframes, print_output=True)
+
+def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_output=True, plot_heatmap=False):
+    """
+    Processes a dictionary of DataFrames to remove features that are highly correlated with other features.
+    High correlations among features can cause multicollinearity issues in certain models, so it can be beneficial to
+    remove such features during data preprocessing.
+
+    Parameters:
+    - dataframes_dict (dict): A dictionary where keys are strings representing the names (or types) of DataFrames, and
+      values are the corresponding pandas DataFrames.
+
+    - threshold (float, optional): The correlation coefficient threshold above which features will be considered highly
+      correlated and thus will be removed. Default is 0.90.
+
+    - print_output (bool, optional): If set to True (default), the function will print the shape of each DataFrame after
+      removal of highly correlated features, as well as the names of the removed columns. If set to False, no output
+      will be printed.
+
+    - plot_heatmap (bool, optional): If set to True, the function will plot a heatmap of the correlation matrix for each
+      DataFrame. This can be useful for visual inspection of correlations among features. Default is False.
+
+    Returns:
+    - tuple: A tuple containing two items:
+    - dataframes_dict (dict): The input dictionary with highly correlated features removed from each DataFrame.
+    - dropped_features (dict): A dictionary where keys are the same as the input dictionary, and values are lists of
+      feature names that were dropped due to high correlation.
+    """
+    dropped_features = {}
+
+    for omic, df6 in dataframes_dict.items():
+
+        # Calculate the correlation matrix
+        corr_matrix = df6.corr().abs()
+
+        # Create a mask to identify highly correlated features
+        upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
+        to_drop = [column for column in upper.columns if any(upper[column] > threshold)]
+
+        # Plot the heatmap if required
+        if plot_heatmap:
+            plt.figure(figsize=(12, 10))
+            sns.heatmap(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+            plt.title(f"Heatmap of Correlation for {omic}")
+            plt.show()
+
+        # Drop the highly correlated features
+        df_filtered = df.drop(columns=to_drop)
+
+        # Store the list of removed features
+        dropped_features[omic] = to_drop
+
+        # Update the DataFrame in dataframes_dict
+        dataframes_dict[omic] = df_filtered
+
+        num_dropped = len(to_drop)
+
+        if print_output:
+            print(f"{omic} after removing highly correlated features: {df_filtered.shape}")
+            print(f"Number of features dropped in {omic}: {num_dropped}")
+            if num_dropped > 0:
+                print(f"Features dropped in {omic}: {', '.join(to_drop)}\n")
+
+    return dataframes_dict, dropped_features
+
+
+dataframes, dropped_corr_features = remove_highly_correlated_features(dataframes,
+                                                                      print_output=True,
+                                                                      plot_heatmap=True,
+                                                                      threshold=0.90)
