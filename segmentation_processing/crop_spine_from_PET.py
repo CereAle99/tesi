@@ -55,10 +55,3 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     cut_file = nib.Nifti1Image(cut_image, resized_pet.affine, resized_pet.header)
 
     return cut_file
-
-
-# Cut the image
-final_image = crop_spine_shape(image_obj, spine, "dilation", 15)
-
-# Save the modified segmentation as a NIfTI file
-nib.save(final_image, os.path.join(data_path, 'spine_PET.nii'))
