@@ -1,6 +1,7 @@
 import os
 import nibabel as nib
-from crop_spine_from_PET import crop_spine_shape
+from segmentation_processing.crop_spine_from_PET import crop_spine_shape
+
 
 if __name__ == "__main__":
     # All patients path
@@ -34,23 +35,23 @@ if __name__ == "__main__":
             nib.save(cut_pet, os.path.join(data_path, patient_id, "PT_" + function + ".nii"))
             print("Saved: ", "PT_" + function + ".nii")
 
-    # For each patient in folder moose_2
-    for patient_id in os.listdir(moose_path2):
-        print("Patient: ", patient_id)
-        # Get PET path
-        patient_path = os.path.join(moose_path2, patient_id)
-        pet_path = os.path.join(data_path, patient_id, "PT.nii")
-        # Find the label folder for moose 2.0
-        start_seq = "moosez"
-        label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
-        label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
-        # Load label
-        segmentation_file = nib.load(label_path)
-        pet_file = nib.load(pet_path)
-        # Shape the PET image
-        for function in shapes:
-            cut_pet = crop_spine_shape(input_nifti=pet_file,
-                                       mask=segmentation_file,
-                                       shape=function,
-                                       segmentation_value=15)
-            nib.save(cut_pet, os.path.join(data_path, patient_id, 'PT_' + function + ".nii"))
+    # # For each patient in folder moose_2
+    # for patient_id in os.listdir(moose_path2):
+    #     print("Patient: ", patient_id)
+    #     # Get PET path
+    #     patient_path = os.path.join(moose_path2, patient_id)
+    #     pet_path = os.path.join(data_path, patient_id, "PT.nii")
+    #     # Find the label folder for moose 2.0
+    #     start_seq = "moosez"
+    #     label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
+    #     label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+    #     # Load label
+    #     segmentation_file = nib.load(label_path)
+    #     pet_file = nib.load(pet_path)
+    #     # Shape the PET image
+    #     for function in shapes:
+    #         cut_pet = crop_spine_shape(input_nifti=pet_file,
+    #                                    mask=segmentation_file,
+    #                                    shape=function,
+    #                                    segmentation_value=15)
+    #         nib.save(cut_pet, os.path.join(data_path, patient_id, 'PT_' + function + ".nii"))
