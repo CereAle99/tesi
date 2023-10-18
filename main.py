@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # Define an iteration index and loop limit
     i = 0
-    max_loops = 4
+    max_loops = 1
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
@@ -33,12 +33,11 @@ if __name__ == "__main__":
             label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
             pet_path = os.path.join(data_path, patient_id, "PT.nii")
 
-            # Load label
-            segmentation_file = nib.load(label_path)
-            pet_file = nib.load(pet_path)
-
             # Shape the PET image
             for function in shapes:
+                # Load label
+                segmentation_file = nib.load(label_path)
+                pet_file = nib.load(pet_path)
                 cut_pet = crop_spine_shape(input_nifti=pet_file,
                                            mask=segmentation_file,
                                            shape=function,
@@ -81,11 +80,11 @@ if __name__ == "__main__":
     #     start_seq = "moosez"
     #     label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
     #     label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
-    #     # Load label
-    #     segmentation_file = nib.load(label_path)
-    #     pet_file = nib.load(pet_path)
     #     # Shape the PET image
     #     for function in shapes:
+    #         # Load label
+    #         segmentation_file = nib.load(label_path)
+    #         pet_file = nib.load(pet_path)
     #         cut_pet = crop_spine_shape(input_nifti=pet_file,
     #                                    mask=segmentation_file,
     #                                    shape=function,
