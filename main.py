@@ -6,14 +6,12 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 if __name__ == "__main__":
     # All patients path
     current_path = os.getcwd()
-    moose_path1 = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                   "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_1")
-    moose_path2 = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                   "volume=Genomed/Genomed4All_Data/MultipleMieloma/Segmentations/moose_2")
-    data_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                 "volume=Genomed/Genomed4All_Data/MultipleMieloma/PET-CT")
-    save_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                 "volume=Genomed/Genomed4All_Data/MultipleMieloma/spine_PET")
+    shared_dir_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
+                       "volume=Genomed")
+    moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Segmentations/moose_1"
+    moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Segmentations/moose_2"
+    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/PET-CT"
+    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
 
     # PET cropping functions
     shapes = ["original", "fill_holes", "dilation", "cylinder"]
