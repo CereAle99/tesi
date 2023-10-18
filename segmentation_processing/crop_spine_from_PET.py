@@ -1,22 +1,9 @@
 import nibabel as nib
-import os
-from resizePET_Ale import pet_compatible_to_ct
-from fill_spine import fill_spinal_holes
-from close_spine_area import dilate_spine
-from spine_outofthe_cylinder import spine_as_cylinder
-from binarize import binarize
-
-# Get the present directory path and data directory
-print("inizio")
-current_directory = os.getcwd()
-data_path = current_directory + '/data/'
-image_path = data_path + 'test_PET/MPC_300_20190104/'
-
-# Load the segmentation NIfTI file
-spine = nib.load(data_path + "CT_Bones_V1_CT_0000.nii.gz")
-
-# Load the segmentation NIfTI file
-image_obj = nib.load(image_path + "PT.nii")
+from segmentation_processing.resizePET_Ale import pet_compatible_to_ct
+from segmentation_processing.fill_spine import fill_spinal_holes
+from segmentation_processing.close_spine_area import dilate_spine
+from segmentation_processing.spine_outofthe_cylinder import spine_as_cylinder
+from segmentation_processing.binarize import binarize
 
 
 def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41):
