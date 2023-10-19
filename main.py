@@ -19,10 +19,16 @@ if __name__ == "__main__":
     # # Define an iteration index and loop limit
     # i = 0
     # max_loops = 1
+    checkpoint = False
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
+
+        # Continue from where it stopped
+        if not ((patient_id == "MPC_122_20141223") | checkpoint):
+            continue
+        checkpoint = True
 
         try:
             # Get label and PET path
@@ -60,18 +66,21 @@ if __name__ == "__main__":
             # Write the patient id which had an error
             with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: FileNotFoundError\n")
+            continue
 
         except StopIteration:
             print("StopIteration for patient: ", patient_id)
             # Write the patient id which had an error
             with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: StopIteration\n")
+            continue
 
         except Exception as e:
             print(f"Unknown error ({e}) for patient: ", patient_id)
             # Write the patient id which had an error
             with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")
+            continue
 
     # # For each patient in folder moose_2
     # for patient_id in os.listdir(moose_path2):
