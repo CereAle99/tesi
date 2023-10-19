@@ -7,8 +7,7 @@ if __name__ == "__main__":
 
     # All patients path
     current_path = os.getcwd()
-    shared_dir_path = ("/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,"
-                       "volume=Genomed")
+    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
     moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Segmentations/moose_1"
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Segmentations/moose_2"
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/PET-CT"
@@ -17,9 +16,9 @@ if __name__ == "__main__":
     # PET cropping functions
     shapes = ["original", "fill_holes", "dilation", "cylinder"]
 
-    # Define an iteration index and loop limit
-    i = 0
-    max_loops = 4
+    # # Define an iteration index and loop limit
+    # i = 0
+    # max_loops = 1
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
@@ -51,10 +50,10 @@ if __name__ == "__main__":
                 nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
                 print("Saved: ", "PT_" + function + ".nii")
 
-            # Limit the loops
-            if i == max_loops:
-                break
-            i += 1
+            # # Limit the loops
+            # if i == max_loops:
+            #     break
+            # i += 1
 
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
