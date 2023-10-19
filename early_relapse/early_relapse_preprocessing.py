@@ -660,3 +660,8 @@ dataframes, _ = scale_dataframes_zscore(dataframes)
 
 for df, item in dataframes_train.items():
     print(item.shape)
+    print(df)
+    file_path = data_path + f"/{df}_preprocessed.csv"
+    item.to_csv(file_path, index=False)
+
+
