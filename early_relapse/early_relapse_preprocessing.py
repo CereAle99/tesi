@@ -3,12 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt  # 2D plotting library
 import seaborn as sns  # Python data visualization library based on matplotlib
 import warnings  # Typically issued in situations where it is useful to alert the user of some condition in a program
-from collections import Counter  # Supports iterations
-from os import path
 import os
 from sklearn.feature_selection import VarianceThreshold
-from sklearn.preprocessing import MinMaxScaler  # Feature scaling
-
+from sklearn.preprocessing import StandardScaler  # Feature scaling
+from sklearn.model_selection import StratifiedShuffleSplit
 from lifelines import KaplanMeierFitter
 
 warnings.filterwarnings('ignore')  # Ignores all warnings
@@ -456,7 +454,7 @@ def drop_columns_with_nan(dataframes_dict, print_output=True):
 dataframes = drop_columns_with_nan(dataframes, print_output=True)
 
 
-def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_output=True, plot_heatmap=False):
+def remove_highly_correlated_features(dataframes_dict, threshold1=0.90, print_output=True, plot_heatmap=False):
     """
     Processes a dictionary of DataFrames to remove features that are highly correlated with other features.
     High correlations among features can cause multicollinearity issues in certain models, so it can be beneficial to
@@ -491,7 +489,7 @@ def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_out
 
         # Create a mask to identify highly correlated features
         upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
-        to_drop = [column for column in upper.columns if any(upper[column] > threshold)]
+        to_drop = [column for column in upper.columns if any(upper[column] > threshold1)]
 
         # Plot the heatmap if required
         if plot_heatmap:
@@ -501,7 +499,7 @@ def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_out
             plt.show()
 
         # Drop the highly correlated features
-        df_filtered = df.drop(columns=to_drop)
+        df_filtered = df6.drop(columns=to_drop)
 
         # Store the list of removed features
         dropped_features[omic] = to_drop
@@ -523,4 +521,147 @@ def remove_highly_correlated_features(dataframes_dict, threshold=0.90, print_out
 dataframes, dropped_corr_features = remove_highly_correlated_features(dataframes,
                                                                       print_output=True,
                                                                       plot_heatmap=True,
-                                                                      threshold=0.90)
+                                                                      threshold1=0.90)
+
+# 1. Find Common Patients
+# Start with the patients in the survival dataframe
+common_patients = set(early_relapse.index)
+
+# Find intersection with patients in each omics dataframe
+for omic_name, df in dataframes.items():
+    common_patients = common_patients.intersection(df.index)
+
+print("Number of patients present in all dataframes and the survival dataframe:", len(common_patients))
+
+common_patients = list(common_patients)
+
+# 2. Perform Stratified Sampling
+# Filter the survival dataframe to only the common patients
+filtered_survival_df = early_relapse.loc[common_patients]
+
+# Set the number of patients for the test set
+n_test_patients = 40
+
+splitter = StratifiedShuffleSplit(n_splits=1, test_size=n_test_patients, random_state=42)
+train_index, test_index = next(splitter.split(filtered_survival_df, filtered_survival_df['early_relapse']))
+
+train_patients = filtered_survival_df.iloc[train_index].index
+test_patients = filtered_survival_df.iloc[test_index].index
+
+# 3. Split the Dataframes
+dataframes_train = {}
+dataframes_test = {}
+
+for omic_name, df in dataframes.items():
+    dataframes_train[omic_name] = df.loc[df.index.difference(test_patients)]  # All rows except the test patients
+    dataframes_test[omic_name] = df.loc[test_patients]
+
+# Displaying sizes
+for omic_name, df_train in dataframes_train.items():
+    print(f"{omic_name} Train: {df_train.shape}")
+    print(f"{omic_name} Test: {dataframes_test[omic_name].shape}")
+
+# Data standardization
+
+for df, item in dataframes.items():
+    print(item.shape)
+
+
+def scale_dataframes(dataframes_train_dict, dataframes_test_dict):
+    """
+    Scales all dataframes in the provided training dictionary using StandardScaler and
+    applies the transformation learned from each training dataframe
+    to the corresponding dataframe in the test dictionary.
+
+    Parameters:
+    - dataframes_train_dict (dict): Dictionary containing training dataframes to be scaled.
+    - dataframes_test_dict (dict): Dictionary containing test dataframes where the scaling transformation learned from
+      the training data is applied.
+
+    Returns:
+    - tuple: (Dictionary containing scaled training dataframes, Dictionary containing scaled test dataframes)
+    """
+    scaled_train_dict = {}
+    scaled_test_dict = {}
+
+    for key, train_df in dataframes_train_dict.items():
+        if key != "CLI":
+            scaler = StandardScaler()
+
+            # Fit and transform the training data
+            scaled_train_data = scaler.fit_transform(train_df)
+            scaled_train_dict[key] = pd.DataFrame(scaled_train_data, columns=train_df.columns,
+                                                  index=train_df.index)
+
+            if dataframes_test_dict:
+                # Transform the test data based on the fitted scaler
+                test_df = dataframes_test_dict.get(key,
+                                                   pd.DataFrame())  # get the test dataframe for the current
+                # key, if it doesn't exist, use an empty dataframe
+                scaled_test_data = scaler.transform(test_df)
+                scaled_test_dict[key] = pd.DataFrame(scaled_test_data, index=test_df.index,
+                                                     columns=test_df.columns)
+        else:
+            scaled_train_dict[key] = train_df
+            if dataframes_test_dict:
+                scaled_test_dict[key] = dataframes_test_dict[key]
+
+    return scaled_train_dict, scaled_test_dict
+
+
+def scale_dataframes_zscore(dataframes_train_dict, dataframes_test_dict=None):
+    """
+    Applies Z-score normalization to all dataframes in the provided training dictionary and
+    uses the scaler trained on each dataframe in the dictionary to scale
+    the corresponding dataframe in the test dictionary.
+
+    Parameters:
+    - dataframes_train_dict (dict): Dictionary containing training dataframes to be normalized.
+    - dataframes_test_dict (dict): Dictionary containing test dataframes where the scaling transformation learned from
+      the training data is applied.
+
+    Returns:
+    - tuple: (Dictionary containing scaled training dataframes, Dictionary containing scaled test dataframes)
+    """
+    scaler = StandardScaler()
+    scaled_train_dict = {}
+    scaled_test_dict = {}
+
+    for key, train_df in dataframes_train_dict.items():
+        if key != "CLI":
+            # Fit on the training data
+            scaler.fit(train_df)
+
+            # Transform training data
+            scaled_train_data = scaler.transform(train_df)
+            scaled_train_dict[key] = pd.DataFrame(scaled_train_data, columns=train_df.columns, index=train_df.index)
+
+            # Check if the key exists in dataframes_test_dict
+            if dataframes_test_dict:
+                if key in dataframes_test_dict:
+                    # Transform the test data using the fitted scaler
+                    test_df = dataframes_test_dict[key]
+                    scaled_test_data = scaler.transform(test_df)
+                    scaled_test_dict[key] = pd.DataFrame(scaled_test_data, columns=test_df.columns, index=test_df.index)
+                else:
+                    print(f"Warning: Key '{key}' not found in test data dictionary.")
+        else:
+            scaled_train_dict[key] = train_df
+            if dataframes_test_dict:
+                if key in dataframes_test_dict:
+                    scaled_test_dict[key] = dataframes_test_dict[key]
+                else:
+                    print(f"Warning: Key '{key}' not found in test data dictionary.")
+
+    return scaled_train_dict, scaled_test_dict
+
+
+dataframes, _ = scale_dataframes_zscore(dataframes)
+
+for df, item in dataframes_train.items():
+    print(item.shape)
+    print(df)
+    file_path = data_path + f"/{df}_preprocessed.csv"
+    item.to_csv(file_path, index=False)
+
+
