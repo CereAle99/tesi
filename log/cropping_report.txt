@@ -1,1 +1,7 @@
-MPC_122_20141223: FileNotFoundError
+MPC_122_20141223: FileNotFoundError	-ALE: CT just for half legs
+MPC_176_20170518: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,36))	-ALE: PET.nii is cut, select PET2.nii
+MPC_249_20130306: FileNotFoundError -ALE: there's no Spine.nii.gz, take  /MPC_249_20130306/labels/Bones_CT.nii.gz
+MPC_140_20171013: FileNotFoundError
+MPC_136_20150818_NOTDONE_TOOLONG: FileNotFoundError
+MPC_224_20160118: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,36))
+P1: FileNotFoundError
