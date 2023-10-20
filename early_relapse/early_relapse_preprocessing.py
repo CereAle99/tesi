@@ -540,7 +540,7 @@ common_patients = list(common_patients)
 filtered_survival_df = early_relapse.loc[common_patients]
 
 # Set the number of patients for the test set
-n_test_patients = 40
+n_test_patients = 20
 
 splitter = StratifiedShuffleSplit(n_splits=1, test_size=n_test_patients, random_state=42)
 train_index, test_index = next(splitter.split(filtered_survival_df, filtered_survival_df['early_relapse']))
@@ -656,12 +656,23 @@ def scale_dataframes_zscore(dataframes_train_dict, dataframes_test_dict=None):
     return scaled_train_dict, scaled_test_dict
 
 
+scaled_train_dataframes, scaled_test_dataframes = scale_dataframes_zscore(dataframes_train, dataframes_test)
 dataframes, _ = scale_dataframes_zscore(dataframes)
 
-for df, item in dataframes_train.items():
+for df, item in scaled_train_dataframes.items():
+    print(item.shape)
+    print(df)
+    file_path = data_path + f"/{df}_preprocessed_train.csv"
+    item.to_csv(file_path, index=True, index_label="MPC")
+
+for df, item in scaled_test_dataframes.items():
+    print(item.shape)
+    print(df)
+    file_path = data_path + f"/{df}_preprocessed_test.csv"
+    item.to_csv(file_path, index=True, index_label="MPC")
+
+for df, item in dataframes.items():
     print(item.shape)
     print(df)
     file_path = data_path + f"/{df}_preprocessed.csv"
-    item.to_csv(file_path, index=False)
-
-
+    item.to_csv(file_path, index=True, index_label="MPC")
