@@ -1,4 +1,5 @@
 import nibabel as nib
+import numpy as np
 from segmentation_processing.resizePET_Ale import pet_compatible_to_ct
 from segmentation_processing.fill_spine import fill_spinal_holes
 from segmentation_processing.close_spine_area import dilate_spine
@@ -43,14 +44,18 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask)
     print("done resizing")
     # Put the segmentation into a numpy array
-    spine_mask = resized_mask.get_fdata()
+    mask = resized_mask.get_fdata()
 
     # Put the image into a numpy array
     image = resized_pet.get_fdata()
 
+    # Evaluate the offset shift
+    shift = ((resized_pet.affine[0:3, 3] - resized_mask.affine[0:3, 3]) / np.abs(np.diag(resized_pet.affine)[0:3]) - 0.55).astype(int)
+    mask = np.roll(mask, shift=shift, axis=(0, 1, 2))
+
     # Cut the PET image
-    cut_image = image * spine_mask
-    print("done cutting")
+    cut_image = image * mask
+    print(f"done cutting. Shift: {shift}")
     # Save cut image in a NIfTI file
     cut_file = nib.Nifti1Image(cut_image, resized_pet.affine, resized_pet.header)
 
