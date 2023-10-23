@@ -39,9 +39,9 @@ y = torch.tensor(y.values, dtype=torch.float32).reshape(-1, 1)
 class Wide(nn.Module):
     def __init__(self):
         super().__init__()
-        self.hidden = nn.Linear(60, 450)
+        self.hidden = nn.Linear(148, 450)
         self.relu = nn.ReLU()
-        self.output = nn.Linear(180, 1)
+        self.output = nn.Linear(450, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -53,7 +53,7 @@ class Wide(nn.Module):
 class Deep(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer1 = nn.Linear(150, 150)
+        self.layer1 = nn.Linear(148, 150)
         self.act1 = nn.ReLU()
         self.layer2 = nn.Linear(150, 150)
         self.act2 = nn.ReLU()
