@@ -25,10 +25,10 @@ if __name__ == "__main__":
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
 
-        # Continue from where it stopped
-        if not ((patient_id == "MPC_122_20141223") | checkpoint):
-            continue
-        checkpoint = True
+        # # Continue from where it stopped
+        # if not ((patient_id == "MPC_122_20141223") | checkpoint):
+        #     continue
+        # checkpoint = True
 
         try:
             # Get label and PET path
