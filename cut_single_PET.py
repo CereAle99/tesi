@@ -16,4 +16,4 @@ if __name__ == "__main__":
 
     cut_pet = crop_spine_shape(pet_file, segmentation_file, "original", 41)
 
-    nib.save(cut_pet, data_path + "/PT_pixdim_fix.nii")
+    nib.save(cut_pet, data_path + "/PT_pixdim_shift_fix.nii")
