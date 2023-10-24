@@ -1,6 +1,6 @@
 import numpy as np
 import nibabel as nib
-from scipy.ndimage import zoom
+from scipy.ndimage import zoom, shift
 
 
 def pet_compatible_to_ct(pet_nifti, ct_nifti):
@@ -68,6 +68,12 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     ct_affine[0, 3] = ct_header['qoffset_x'] + side_x * (-pet_affine[0, 0])
     ct_affine[1, 3] = ct_header['qoffset_y'] + side_y * (-pet_affine[1, 1])
     ct_affine[2, 3] = ct_header['qoffset_z'] + side_z * (pet_affine[2, 2])
+
+    # Evaluate the offset and shift the PET image
+    shift_vector = (ct_affine[0:3, 3] - pet_affine[0:3, 3]) / np.abs(np.diag(pet_affine)[0:3])
+    pet_image = shift(pet_image, shift_vector, mode="nearest")
+
+    # Fix the PET offset (must be the same of the segmentation offset)
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
