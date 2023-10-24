@@ -26,7 +26,7 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
 
     # PET resizing and his displacement
-    pet_image = zoom(pet_image, zoom=resize_ratio)
+    pet_image = zoom(pet_image, zoom=resize_ratio, grid_mode=True)
     rest = np.array(pet_image.shape) - np.array(pet_header['dim'][1:4]) * np.array(resize_ratio)
     pixel_displacement = rest / np.array(pet_image.shape)
 
