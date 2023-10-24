@@ -50,12 +50,12 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     image = resized_pet.get_fdata()
 
     # Evaluate the offset shift
-    shift = ((resized_pet.affine[0:3, 3] - resized_mask.affine[0:3, 3]) / np.abs(np.diag(resized_pet.affine)[0:3]) - 0.55).astype(int)
-    mask = np.roll(mask, shift=shift, axis=(0, 1, 2))
+    shift_vector = (resized_mask.affine[0:3, 3] - resized_pet.affine[0:3, 3]) / np.abs(np.diag(resized_pet.affine)[0:3])
+    image = shift(image, shift_vector, mode="nearest")
 
     # Cut the PET image
     cut_image = image * mask
-    print(f"done cutting. Shift: {shift}")
+    print(f"done cutting. Shift: {shift_vector}")
     # Save cut image in a NIfTI file
     cut_file = nib.Nifti1Image(cut_image, resized_pet.affine, resized_pet.header)
 
