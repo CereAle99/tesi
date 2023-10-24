@@ -54,6 +54,7 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     # Cut the PET image
     cut_image = image * mask
     print(f"done cutting. Shift: {shift_vector}")
+
     # Save cut image in a NIfTI file
     cut_file = nib.Nifti1Image(cut_image, resized_pet.affine, resized_pet.header)
 
