@@ -12,13 +12,14 @@ if __name__ == "__main__":
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Moose_output/moose_2"
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/PET-CT"
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
+    # save_path = os.path.join(current_path, "data", "test_PET")
 
     # PET cropping functions
     shapes = ["original", "fill_holes", "dilation", "cylinder"]
 
-    # # Define an iteration index and loop limit
-    # i = 0
-    # max_loops = 1
+    # Define an iteration index and loop limit
+    i = 0
+    max_loops = 4
     checkpoint = False
 
     # For each patient in folder moose_1
@@ -56,10 +57,10 @@ if __name__ == "__main__":
                 nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
                 print("Saved: ", "PT_" + function + ".nii")
 
-            # # Limit the loops
-            # if i == max_loops:
-            #     break
-            # i += 1
+            # Limit the loops
+            if i == (max_loops - 1):
+                break
+            i += 1
 
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
