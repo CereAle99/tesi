@@ -73,7 +73,10 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     shift_vector = (ct_affine[0:3, 3] - pet_affine[0:3, 3]) / np.abs(np.diag(pet_affine)[0:3])
     pet_image = shift(pet_image, shift_vector, mode="nearest")
 
-    # Fix the PET offset (must be the same of the segmentation offset)
+    # Fix the PET offset
+    pet_affine[0, 3] = ct_affine[0, 3]
+    pet_affine[1, 3] = ct_affine[1, 3]
+    pet_affine[2, 3] = ct_affine[2, 3]
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
