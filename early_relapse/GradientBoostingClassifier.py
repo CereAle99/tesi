@@ -4,6 +4,8 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import torch
+from sklearn.metrics import roc_curve
+import matplotlib.pyplot as plt
 
 current_directory = os.getcwd()
 data_path = os.path.join(current_directory, "data/")
@@ -42,3 +44,13 @@ y_pred = gb_model.predict(X_test)
 # Calcola l'accuratezza
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy}')
+
+with torch.no_grad():
+    # Plot the ROC curve
+    y_pred = gb_model.predict(X_test)
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+    plt.plot(fpr, tpr)  # ROC curve = TPR vs FPR
+    plt.title("Receiver Operating Characteristics")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.show()
