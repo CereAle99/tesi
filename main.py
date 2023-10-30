@@ -20,16 +20,16 @@ if __name__ == "__main__":
     # # Define an iteration index and loop limit
     # i = 0
     # max_loops = 4
-    checkpoint = False
+    # checkpoint = False
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
 
-        # Continue from where it stopped
-        if not ((patient_id == "MPC_31_20121123") | checkpoint):
-            continue
-        checkpoint = True
+        # # Continue from where it stopped
+        # if not ((patient_id == "MPC_206_20160330") | checkpoint):
+        #     continue
+        # checkpoint = True
 
         try:
             # Get label and PET path
