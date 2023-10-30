@@ -4,6 +4,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import torch
+from sklearn.metrics import roc_curve
+import matplotlib.pyplot as plt
 
 current_directory = os.getcwd()
 data_path = os.path.join(current_directory, "data/")
@@ -33,12 +35,22 @@ y = torch.tensor(y.values, dtype=torch.float32).reshape(-1, 1)
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, shuffle=True)
 
 # Crea un modello di regressione logistica con regolarizzazione L1
-model = LogisticRegression(penalty='l1', C=1.0, solver='liblinear')
-model.fit(X_train, y_train)
+lr_model = LogisticRegression(penalty='l1', C=1.0, solver='liblinear')
+lr_model.fit(X_train, y_train)
 
 # Calcola le previsioni sul set di test
-y_pred = model.predict(X_test)
+y_pred = lr_model.predict(X_test)
 
 # Calcola l'accuratezza
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy}')
+
+with torch.no_grad():
+    # Plot the ROC curve
+    y_pred = lr_model.predict(X_test)
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+    plt.plot(fpr, tpr)  # ROC curve = TPR vs FPR
+    plt.title("Receiver Operating Characteristics")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.show()
