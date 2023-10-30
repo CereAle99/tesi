@@ -17,19 +17,19 @@ if __name__ == "__main__":
     # PET cropping functions
     shapes = ["original", "fill_holes", "dilation", "cylinder"]
 
-    # Define an iteration index and loop limit
-    i = 0
-    max_loops = 4
+    # # Define an iteration index and loop limit
+    # i = 0
+    # max_loops = 4
     checkpoint = False
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
 
-        # # Continue from where it stopped
-        # if not ((patient_id == "MPC_122_20141223") | checkpoint):
-        #     continue
-        # checkpoint = True
+        # Continue from where it stopped
+        if not ((patient_id == "MPC_31_20121123") | checkpoint):
+            continue
+        checkpoint = True
 
         try:
             # Get label and PET path
@@ -58,9 +58,9 @@ if __name__ == "__main__":
                 print("Saved: ", "PT_" + function + ".nii")
 
             # Limit the loops
-            if i == (max_loops - 1):
-                break
-            i += 1
+            # if i == (max_loops - 1):
+            #     break
+            # i += 1
 
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
