@@ -1,8 +1,6 @@
 import pandas as pd
 import os
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedKFold, train_test_split
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
 import copy
@@ -14,30 +12,16 @@ from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 
 
-class Wide(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.hidden = nn.Linear(148, 450)
-        self.relu = nn.ReLU()
-        self.output = nn.Linear(450, 1)
-        self.sigmoid = nn.Sigmoid()
-
-    def forward(self, x):
-        x = self.relu(self.hidden(x))
-        x = self.sigmoid(self.output(x))
-        return x
-
-
 class Deep(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer1 = nn.Linear(148, 300)
+        self.layer1 = nn.Linear(148, 3000)
         self.act1 = nn.ReLU()
-        self.layer2 = nn.Linear(300, 300)
+        self.layer2 = nn.Linear(3000, 3000)
         self.act2 = nn.ReLU()
-        self.layer3 = nn.Linear(300, 300)
+        self.layer3 = nn.Linear(3000, 3000)
         self.act3 = nn.ReLU()
-        self.output = nn.Linear(300 , 1)
+        self.output = nn.Linear(3000, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -51,10 +35,10 @@ class Deep(nn.Module):
 def model_train(model, x_train, y_train, x_val, y_val):
     # loss function and optimizer
     loss_fn = nn.BCELoss()  # binary cross entropy
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
-    n_epochs = 250
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    n_epochs = 100
     # number of epochs to run
-    batch_size = 20  # size of each batch
+    batch_size = 10  # size of each batch
     batch_start = torch.arange(0, len(x_train), batch_size)
     # Hold the best model
     best_acc = - np.inf
@@ -62,7 +46,7 @@ def model_train(model, x_train, y_train, x_val, y_val):
     best_weights = None
     for epoch in range(n_epochs):
         model.train()
-        with tqdm.tqdm(batch_start, unit="batch", mininterval=0, disable=True) as bar:
+        with tqdm.tqdm(batch_start, unit="batch", mininterval=0, disable=False) as bar:
             bar.set_description(f"Epoch {epoch}")
             for start in bar:
                 # take a batch
@@ -93,10 +77,6 @@ def model_train(model, x_train, y_train, x_val, y_val):
 
 
 if __name__ == "__main__":
-
-    # Compare model sizes
-    model1 = Wide()
-    model2 = Deep()
 
     # print(sum([x.reshape(-1).shape[0] for x in model1.parameters()]))
     # print(sum([x.reshape(-1).shape[0] for x in model2.parameters()]))
@@ -129,41 +109,10 @@ if __name__ == "__main__":
     # print(y.shape)
 
     # train-test split: Hold out the test set for final model evaluation
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, shuffle=True)
-
-    # define 5-fold cross-validation test harness
-    kfold = StratifiedKFold(n_splits=5, shuffle=True)
-    cv_scores_wide = []
-    for train, test in kfold.split(X_train, y_train):
-        # create model, train, and get accuracy
-        model = Wide()
-        acc = model_train(model, X_train[train], y_train[train], X_train[test], y_train[test])
-        print("Accuracy (wide): %.2f" % acc)
-        cv_scores_wide.append(acc)
-
-    cv_scores_deep = []
-    for train, test in kfold.split(X_train, y_train):
-        # create model, train, and get accuracy
-        model = Deep()
-        acc = model_train(model, X_train[train], y_train[train], X_train[test], y_train[test])
-        print("Accuracy (deep): %.2f" % acc)
-        cv_scores_deep.append(acc)
-
-    # evaluate the model
-    wide_acc = np.mean(cv_scores_wide)
-    wide_std = np.std(cv_scores_wide)
-    deep_acc = np.mean(cv_scores_deep)
-    deep_std = np.std(cv_scores_deep)
-    print("Wide: %.2f%% (+/- %.2f%%)" % (wide_acc * 100, wide_std * 100))
-    print("Deep: %.2f%% (+/- %.2f%%)" % (deep_acc * 100, deep_std * 100))
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.6, shuffle=True)
 
     # rebuild model with full set of training data
-    if wide_acc > deep_acc:
-        print("Retrain a wide model")
-        model = Wide()
-    else:
-        print("Retrain a deep model")
-        model = Deep()
+    model = Deep()
     acc = model_train(model, X_train, y_train, X_test, y_test)
     print(f"Final model accuracy: {acc*100:.2f}%")
 
@@ -171,7 +120,7 @@ if __name__ == "__main__":
 
     with torch.no_grad():
         # Test out inference with 5 samples
-        for i in range(5):
+        for i in range(10):
             y_pred = model(X_test[i:i+1])
             print(f" -> {y_pred[0].numpy()} " + f"(expected {y_test[i].numpy()})")
 
