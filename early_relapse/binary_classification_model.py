@@ -173,7 +173,20 @@ if __name__ == "__main__":
         # Test out inference with 5 samples
         for i in range(5):
             y_pred = model(X_test[i:i+1])
-            print(f"{X_test[i].numpy()} -> {y_pred[0].numpy()} " + f"(expected {y_test[i].numpy()})")
+            print(f" -> {y_pred[0].numpy()} " + f"(expected {y_test[i].numpy()})")
+
+        # Define number of bootstrasp
+        n_bootstrap_iterations = 100
+
+        bootstrap_accuracies = []
+        for _ in range(n_bootstrap_iterations):
+            # Randomly sample the test dataset
+            indices = np.random.choice(len(X_test), len(X_test), replace=True)
+            X_bootstrap = X_test[indices]
+            y_bootstrap = y_test[indices]
+
+            # Evaluate the predicted values
+            y_pred = model(X_bootstrap)
 
     with torch.no_grad():
         # Plot the ROC curve
