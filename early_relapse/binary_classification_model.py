@@ -35,8 +35,8 @@ class Deep(nn.Module):
 def model_train(model, x_train, y_train, x_val, y_val):
     # loss function and optimizer
     loss_fn = nn.BCELoss()  # binary cross entropy
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-    n_epochs = 100
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    n_epochs = 30
     # number of epochs to run
     batch_size = 10  # size of each batch
     batch_start = torch.arange(0, len(x_train), batch_size)
@@ -78,9 +78,6 @@ def model_train(model, x_train, y_train, x_val, y_val):
 
 if __name__ == "__main__":
 
-    # print(sum([x.reshape(-1).shape[0] for x in model1.parameters()]))
-    # print(sum([x.reshape(-1).shape[0] for x in model2.parameters()]))
-
     current_directory = os.getcwd()
     data_path = os.path.join(current_directory, "data/")
 
@@ -98,8 +95,6 @@ if __name__ == "__main__":
 
     X = dataset.iloc[:, 0:-1]
     y = dataset.iloc[:, -1:]
-    print(X.shape)
-    print(y.shape)
 
     # Import as PyTorch tensors
     X = torch.tensor(X.values, dtype=torch.float32)
