@@ -188,7 +188,19 @@ if __name__ == "__main__":
             # Evaluate the predicted values
             y_pred = model(X_bootstrap)
 
-    with torch.no_grad():
+            # Accuracy evaluation
+            accuracy = accuracy_score(y_bootstrap, y_pred.round())
+            bootstrap_accuracies.append(accuracy)
+
+        # Mean accuracy evaluation
+        mean_accuracy = np.mean(bootstrap_accuracies)
+
+        # confidence interval at 95%
+        confidence_interval = np.percentile(bootstrap_accuracies, [2.5, 97.5])
+
+        print("Accuratezza media:", mean_accuracy)
+        print("Intervallo di confidenza al 95%:", confidence_interval)
+
         # Plot the ROC curve
         y_pred = model(X_test)
         fpr, tpr, thresholds = roc_curve(y_test, y_pred)
