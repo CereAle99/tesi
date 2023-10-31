@@ -147,8 +147,8 @@ if __name__ == "__main__":
         # confidence interval at 95%
         confidence_interval = np.percentile(bootstrap_accuracies, [2.5, 97.5])
 
-        print("Accuratezza media:", mean_accuracy)
-        print("Intervallo di confidenza al 95%:", confidence_interval)
+        print("Mean accuracy:", mean_accuracy)
+        print("Confidence interval at 95%:", confidence_interval)
 
         # Plot the ROC curve
         y_pred = model(X_test)
