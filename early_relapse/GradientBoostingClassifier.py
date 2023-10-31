@@ -7,8 +7,11 @@ import torch
 from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 
-current_directory = os.getcwd()
-data_path = os.path.join(current_directory, "data/")
+
+if __name__ == "__main__":
+
+    current_directory = os.getcwd()
+    data_path = os.path.join(current_directory, "data/")
 
 # Read data
 early_relapse = pd.read_csv(data_path + "early_relapse.csv", sep=',')  # Reading early relapse data
