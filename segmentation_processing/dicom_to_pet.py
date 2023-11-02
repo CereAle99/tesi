@@ -3,16 +3,17 @@ import subprocess
 
 # All patients path
 current_path = os.getcwd()
-shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
+shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
 patients_folder = "/Genomed4All_Data/MultipleMieloma/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
 dicom_path = shared_dir_path + patients_folder
 # print(os.listdir(dicom_path)[0])
 
-checkpoint = -1
+# Last file completely converted
+checkpoint = 16
 
 # Loop for patients folders
 for num, patient_id in enumerate(os.listdir(dicom_path)):
-
+    print(num)
     if num <= checkpoint:
         continue
 
@@ -40,4 +41,4 @@ for num, patient_id in enumerate(os.listdir(dicom_path)):
         # Run the command
         subprocess.run(command)
 
-    print(f"Conversion completed. Patient nº{num}: {patient_id}")
+    print(f"\nConversion completed. Patient nº{num}: {patient_id}\n")
