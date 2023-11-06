@@ -22,7 +22,7 @@ early_relapse.to_csv(file_path, index=False)
 
 
 # save it to the file clinical_data_early_relapse.csv
-file_path = data_path + 'clinical_data_early_relapse_complete.csv'
+file_path = os.path.join(data_path, 'clinical_data_early_relapse_complete.csv')
 clinical_data.to_csv(file_path, index=False)
 
 
