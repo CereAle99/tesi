@@ -12,29 +12,29 @@ from lifelines import KaplanMeierFitter
 warnings.filterwarnings('ignore')  # Ignores all warnings
 
 current_directory = os.getcwd()
-data_path = current_directory + '/data/'
+data_path = os.path.join(current_directory , 'early_relapse', 'data')
 
 print("RAW MULTIOMICS DATASET")
 
-early_relapse = pd.read_csv(data_path + "early_relapse.csv", sep=',')  # Reading early relapse data
+early_relapse = pd.read_csv(os.path.join(data_path, "early_relapse_complete.csv"), sep=',')  # Reading early relapse data
 early_relapse = early_relapse.set_index('MPC')
 early_relapse["PFS_I_MONTHS"] = early_relapse["PFS_I_MONTHS"] * 30
 
-dataframe0 = pd.read_csv(data_path + "clinical_data_300523.csv",
+dataframe0 = pd.read_csv(os.path.join(data_path, "clinical_data_complete.csv"),
                          sep=',',
                          dtype={'inst': object})  # Reading clinical dataset
 dataframe0 = dataframe0.set_index('MPC')
 dataframe0.index.name = None
-dataframe0 = dataframe0.drop(columns='gDNA_sample_sheet_ID', axis=1)
+dataframe0 = dataframe0.drop(columns='LAST_FULLOW_UP', axis=1)
 print("CLINICAL DATA :", dataframe0.shape)
 
-dataframe1 = pd.read_csv(data_path + "tot_rad_feats_CT.csv", sep=',')  # Reading CT dataset
+dataframe1 = pd.read_csv(os.path.join(data_path, "tot_rad_feats_CT.csv"), sep=',')  # Reading CT dataset
 dataframe1 = dataframe1.set_index('MPC')
 dataframe1.index.name = None
 dataframe1 = dataframe1.drop(columns='MPC_EXAM_ID', axis=1)
 print("CT :", dataframe1.shape)
 
-dataframe2 = pd.read_csv(data_path + "tot_rad_feats_PET.csv", sep=',')  # Reading DD dataset
+dataframe2 = pd.read_csv(os.path.join(data_path, "tot_rad_feats_PET.csv"), sep=',')  # Reading DD dataset
 dataframe2 = dataframe2.set_index('MPC')
 dataframe2.index.name = None
 dataframe2 = dataframe2.drop(columns='MPC_EXAM_ID', axis=1)
@@ -109,11 +109,12 @@ dataframe0 = bin_feature(dataframe0, "CALCIUM")
 dataframe0 = bin_feature(dataframe0, "PC_TOT")
 dataframe0 = bin_feature(dataframe0, "PLT")
 dataframe0 = bin_feature(dataframe0, "HB")
-dataframe0 = bin_feature(dataframe0, "EM_SUV_max")
-dataframe0 = bin_feature(dataframe0, "PM_SUVmax")
-dataframe0 = bin_feature(dataframe0, "FL_SUV_max")
-dataframe0 = bin_feature(dataframe0, "cfDNA_tumor_fraction")
-dataframe0 = bin_feature(dataframe0, "gDNA_tumor_fraction")
+# dataframe0 = bin_feature(dataframe0, "EM_SUV_max")
+# dataframe0 = bin_feature(dataframe0, "PM_SUVmax")
+# dataframe0 = bin_feature(dataframe0, "FL_SUV_max")
+# dataframe0 = bin_feature(dataframe0, "cfDNA_tumor_fraction")
+# dataframe0 = bin_feature(dataframe0, "gDNA_tumor_fraction")
+# dataframe0 = bin_feature(dataframe0, "PCR")
 
 # Defining the bins for age categorization and binning the age labels
 age_bins = [0, 39, 65, float('inf')]

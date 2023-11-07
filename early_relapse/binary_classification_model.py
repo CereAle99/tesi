@@ -79,15 +79,15 @@ def model_train(model, x_train, y_train, x_val, y_val):
 if __name__ == "__main__":
 
     current_directory = os.getcwd()
-    data_path = os.path.join(current_directory, "data/")
+    data_path = os.path.join(current_directory,"early_relapse" , "data")
 
     # Read data
-    early_relapse = pd.read_csv(data_path + "early_relapse.csv", sep=',')  # Reading early relapse data
+    early_relapse = pd.read_csv(os.path.join(data_path, "early_relapse_complete.csv"), sep=',')  # Reading early relapse data
     early_relapse = early_relapse.set_index('MPC')
     early_relapse = early_relapse["early_relapse"]
 
     filename = "CT_preprocessed.csv"
-    CT_preprocessed = pd.read_csv(data_path + filename, sep=",")
+    CT_preprocessed = pd.read_csv(os.path.join(data_path, filename), sep=",")
     CT_preprocessed = CT_preprocessed.set_index('MPC')
 
     # Intersect the datasets
