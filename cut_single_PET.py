@@ -13,8 +13,6 @@ if __name__ == "__main__":
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
     current_path = os.getcwd()
 
-    next_patient_id = "MPC_3345_20210624"
-
     # Different patient
     patient_id = "MPC_3345_20210624"
 
