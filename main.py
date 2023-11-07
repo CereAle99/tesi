@@ -26,6 +26,10 @@ if __name__ == "__main__":
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
 
+        # Condition to execute just for patients not already done
+        if os.path.isdir(os.path.join(save_path, patient_id)):
+            continue
+
         # # Continue from where it stopped
         # if not ((patient_id == "MPC_206_20160330") | checkpoint):
         #     continue
@@ -86,6 +90,10 @@ if __name__ == "__main__":
     # For each patient in folder moose_2
     for patient_id in os.listdir(moose_path2):
         print("Patient: ", patient_id)
+
+        # Condition to execute just for patients not already done
+        if os.path.isdir(os.path.join(save_path, patient_id)):
+            continue
 
         try:
 
