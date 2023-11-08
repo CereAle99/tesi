@@ -10,11 +10,13 @@ if __name__ == "__main__":
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
     segmentations_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Segmentations"
     original_data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/PET-CT"
-    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
+    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     current_path = os.getcwd()
 
+    # next_patient_id =
+
     # Different patient
-    patient_id = "MPC_3345_20210624"
+    patient_id = "MPC_3350_20210722"
 
     # data_path = os.path.join(current_path, "data", "test_PET", "3338")
     data_path = os.path.join(segmentations_path, patient_id)
