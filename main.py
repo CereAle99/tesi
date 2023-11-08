@@ -7,10 +7,10 @@ if __name__ == "__main__":
 
     # All patients path
     current_path = os.getcwd()
-    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
-    moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Moose_output/moose_1"
-    moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Moose_output/moose_2"
-    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/PET-CT"
+    shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
+    moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_1"
+    moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
+    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/PET-CT"
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
     # save_path = os.path.join(current_path, "data", "test_PET")
 
@@ -24,6 +24,9 @@ if __name__ == "__main__":
 
     # For each patient in folder moose_1
     for patient_id in os.listdir(moose_path1):
+        # Condition to execute just for patients not already done
+        if os.path.isdir(os.path.join(save_path, patient_id)):
+            continue
         print("Patient: ", patient_id)
 
         # # Continue from where it stopped
@@ -35,7 +38,8 @@ if __name__ == "__main__":
             # Get label and PET path
             label_folder = "labels/sim_space/similarity-space"
             patient_path = os.path.join(moose_path1, patient_id)
-            label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
+            # label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
+            label_path = os.path.join(patient_path, "Bones.nii.gz")
             pet_path = os.path.join(data_path, patient_id, "PT.nii")
 
             # Shape the PET image
@@ -85,6 +89,9 @@ if __name__ == "__main__":
 
     # For each patient in folder moose_2
     for patient_id in os.listdir(moose_path2):
+        # Condition to execute just for patients not already done
+        if os.path.isdir(os.path.join(save_path, patient_id)):
+            continue
         print("Patient: ", patient_id)
 
         try:
@@ -93,10 +100,11 @@ if __name__ == "__main__":
             patient_path = os.path.join(moose_path2, patient_id)
             pet_path = os.path.join(data_path, patient_id, "PT.nii")
 
-            # Find the label folder for moose 2.0
-            start_seq = "moosez"
-            label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
-            label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+            # # Find the label folder for moose 2.0
+            # start_seq = "moosez"
+            # label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
+            # label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+            label_path = os.path.join(patient_path, "Bones.nii.gz")
 
             # Shape the PET image
             for function in shapes:

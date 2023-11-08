@@ -12,6 +12,7 @@ file_path = os.path.join(data_path, 'clinical_data_complete.csv')
 clinical_data.to_csv(file_path, index=False)
 
 # add a column with the early relapse index
+clinical_data = clinical_data.dropna(subset=["PFS_I_EVENT", "PFS_I_MONTHS"])
 clinical_data['early_relapse'] = ((clinical_data['PFS_I_EVENT'] == 1) &
                                   (clinical_data['PFS_I_MONTHS'] <= 12)).astype(int)
 
@@ -22,8 +23,8 @@ early_relapse.to_csv(file_path, index=False)
 
 
 # save it to the file clinical_data_early_relapse.csv
-file_path = os.path.join(data_path, 'clinical_data_early_relapse_complete.csv')
-clinical_data.to_csv(file_path, index=False)
+# file_path = os.path.join(data_path, 'clinical_data_early_relapse_complete.csv')
+# clinical_data.to_csv(file_path, index=False)
 
 
 
