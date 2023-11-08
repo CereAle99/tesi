@@ -150,7 +150,7 @@ if __name__ == "__main__":
     # Healthy patients cropping
 
     moose_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/moose_output"
-    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma//Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
+    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
 
     # For each patient in folder moose_2
@@ -170,7 +170,8 @@ if __name__ == "__main__":
             patient_label_path = os.path.join(moose_path, patient_id)
             label_folder = [d for d in os.listdir(patient_label_path) if d.startswith("moosez")]
             label_folder = os.path.join(patient_label_path, label_folder[0], "segmentations")
-            label_path = [d for d in os.listdir(patient_label_path) if d.startswith(".nii.gz")]
+            label_name = [d for d in os.listdir(label_folder) if ".nii.gz" in d]
+            label_path = os.path.join(patient_label_path, label_name[0])
 
             # Shape the PET image
             for function in shapes:
