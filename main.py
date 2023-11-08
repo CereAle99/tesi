@@ -11,7 +11,7 @@ if __name__ == "__main__":
     moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_1"
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/PET-CT"
-    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET"
+    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     # save_path = os.path.join(current_path, "data", "test_PET")
 
     # PET cropping functions
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
         try:
 
-            # Get PET path
+            # Get PET and segmentation path
             patient_path = os.path.join(moose_path2, patient_id)
             pet_path = os.path.join(data_path, patient_id, "PT.nii")
 
@@ -147,3 +147,68 @@ if __name__ == "__main__":
             with open(current_path + "/log/cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")
 
+    # Healthy patients cropping
+
+    moose_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/moose_output"
+    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma//Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
+    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
+
+    # For each patient in folder moose_2
+    for patient_id in os.listdir(moose_path):
+        # Condition to execute just for patients not already done
+        if os.path.isdir(os.path.join(save_path, patient_id)):
+            continue
+        print("Patient: ", patient_id)
+
+        try:
+
+            # Get PET path for healthy patients
+            patient_pet_path = os.path.join(data_path, patient_id)
+            pet_path = [d for d in os.listdir(patient_pet_path) if d.endswith(".nii")]
+
+            # Find the label folder for moose on healthy patients
+            patient_label_path = os.path.join(moose_path, patient_id)
+            label_folder = [d for d in os.listdir(patient_label_path) if d.startswith("moosez")]
+            label_folder = os.path.join(patient_label_path, label_folder[0], "segmentations")
+            label_path = [d for d in os.listdir(patient_label_path) if d.startswith(".nii.gz")]
+
+            # Shape the PET image
+            for function in shapes:
+
+                # Load label
+                segmentation_file = nib.load(label_path)
+                pet_file = nib.load(pet_path)
+
+                # Perform the cropping
+                cut_pet = crop_spine_shape(input_nifti=pet_file,
+                                           mask=segmentation_file,
+                                           shape=function,
+                                           segmentation_value=15)
+
+                # Saved cropped PET
+                save_dir = os.path.join(save_path, patient_id)
+                os.makedirs(save_dir, exist_ok=True)
+                nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
+
+            # # Limit the loops
+            # if i == max_loops:
+            #     break
+            # i += 1
+
+        except FileNotFoundError:
+            print("FileNotFoundError for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+                file.write(f"{patient_id}: FileNotFoundError\n")
+
+        except StopIteration:
+            print("StopIteration for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+                file.write(f"{patient_id}: StopIteration\n")
+
+        except Exception as e:
+            print(f"Unknown error ({e}) for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+                file.write(f"{patient_id}: Unknown error ({e})\n")
