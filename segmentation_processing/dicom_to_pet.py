@@ -3,13 +3,13 @@ import subprocess
 
 # All patients path
 current_path = os.getcwd()
-shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
-patients_folder = "/Genomed4All_Data/MultipleMieloma/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
+shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
+patients_folder = "/Genomed4All_Data/MultipleMieloma/Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions/"
 dicom_path = shared_dir_path + patients_folder
 # print(os.listdir(dicom_path)[0])
 
 # Last file completely converted
-checkpoint = 16
+checkpoint = 94
 
 # Loop for patients folders
 for num, patient_id in enumerate(os.listdir(dicom_path)):
@@ -29,13 +29,16 @@ for num, patient_id in enumerate(os.listdir(dicom_path)):
     # Loop for CT, PET and segmentation folders
     for i, imaging_type in enumerate(os.listdir(images_path)):
 
+        if "PET" not in imaging_type:
+            continue
+
         print(os.listdir(images_path)[i])
 
         # Define the folder with DICOM files to convert
         input_folder = os.path.join(images_path, imaging_type)
 
         # Command to convert the DICOM files in the folder
-        dcm2niix = "/home/gatvmatteo/anaconda3/pkgs/dcm2niix-1.0.20230411-h00ab1b0_0/bin/dcm2niix"
+        dcm2niix = "/home/cronos/anaconda3/envs/medical_images/bin/dcm2niix"
         command = [dcm2niix, "-o", patient_path, input_folder]
 
         # Run the command
