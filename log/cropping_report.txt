@@ -10,3 +10,5 @@ MPC_3025_20200131: Unknown error (could not broadcast input array from shape (51
 MPC_285_20140304: FileNotFoundError
 MPC_3025_20200131: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,18))
 MPC_285_20140304: FileNotFoundError
+MPC_285_20140304: FileNotFoundError
+MPC_3350_20210722: Unknown error ([Errno 5] Input/output error)
