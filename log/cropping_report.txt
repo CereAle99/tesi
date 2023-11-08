@@ -5,3 +5,8 @@ MPC_140_20171013: FileNotFoundError	-ALE: CT just for half legs
 MPC_136_20150818_NOTDONE_TOOLONG: FileNotFoundError	-ALE: no segmentation 
 MPC_224_20160118: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,36))	-ALE: PET.nii is cut, select PET2.nii
 P1: FileNotFoundError	-ALE: Patiend_id == P1 ???
+MPC_285_20140304: FileNotFoundError
+MPC_3025_20200131: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,18))
+MPC_285_20140304: FileNotFoundError
+MPC_3025_20200131: Unknown error (could not broadcast input array from shape (512,512,335) into shape (512,512,18))
+MPC_285_20140304: FileNotFoundError
