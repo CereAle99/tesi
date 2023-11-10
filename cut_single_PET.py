@@ -13,10 +13,11 @@ if __name__ == "__main__":
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     current_path = os.getcwd()
 
-    # next_patient_id =
+    # next_patient_id = MPC_2460_20180828
+    #
 
     # Different patient
-    patient_id = "MPC_3350_20210722"
+    patient_id = "MPC_3349_20210715"
 
     # data_path = os.path.join(current_path, "data", "test_PET", "3338")
     data_path = os.path.join(segmentations_path, patient_id)
@@ -27,9 +28,9 @@ if __name__ == "__main__":
     segmentation_file = nib.load(label_path)
     pet_file = nib.load(pet_path)
 
-    cut_pet = crop_spine_shape(pet_file, segmentation_file, "cylinder", 15)
-
-    nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_cylinder.nii"))
+    # cut_pet = crop_spine_shape(pet_file, segmentation_file, "cylinder", 15)
+    #
+    # nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_cylinder.nii"))
 
     cut_pet = crop_spine_shape(pet_file, segmentation_file, "original", 15)
 
