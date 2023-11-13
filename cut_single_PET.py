@@ -5,7 +5,7 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 if __name__ == "__main__":
 
     # All patients path
-    shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
+    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
     moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_1"
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
     segmentations_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Segmentations"
@@ -13,28 +13,33 @@ if __name__ == "__main__":
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     current_path = os.getcwd()
 
-    # Different patient
-    patient_id = "PETCT_ca16242e89"
+    # next_patient_id = MPC_1768_20170418
+    #
 
-    data_path = os.path.join(current_path, "data", "test_PET")
-    label_path = os.path.join(data_path, patient_id, "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
-    pet_path = os.path.join(data_path, patient_id, "8.000000-PET_corr.-66408_PET_corr._20020913094937_8.nii")
+    # Different patient
+    patient_id = "MPC_2460_20180828"
+
+    # data_path = os.path.join(current_path, "data", "test_PET", "3338")
+    data_path = os.path.join(segmentations_path, patient_id)
+
+    label_path = os.path.join(data_path, "Bones.nii.gz")
+    pet_path = os.path.join(original_data_path, patient_id, "PT2.nii")
 
     segmentation_file = nib.load(label_path)
     pet_file = nib.load(pet_path)
 
-    # cut_pet = crop_spine_shape(pet_file, segmentation_file, "cylinder", 15)
-    #
-    # nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_cylinder.nii"))
+    cut_pet = crop_spine_shape(pet_file, segmentation_file, "cylinder", 15)
+
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_cylinder.nii"))
 
     cut_pet = crop_spine_shape(pet_file, segmentation_file, "original", 15)
 
-    nib.save(cut_pet, os.path.join(data_path, patient_id, "prova", "PT_original.nii"))
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_original.nii"))
 
-    # cut_pet = crop_spine_shape(pet_file, segmentation_file, "dilation", 15)
-    #
-    # nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_dilation.nii"))
-    #
-    # cut_pet = crop_spine_shape(pet_file, segmentation_file, "fill_holes", 15)
-    #
-    # nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_fill_holes.nii"))
+    cut_pet = crop_spine_shape(pet_file, segmentation_file, "dilation", 15)
+
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_dilation.nii"))
+
+    cut_pet = crop_spine_shape(pet_file, segmentation_file, "fill_holes", 15)
+
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_fill_holes.nii"))
