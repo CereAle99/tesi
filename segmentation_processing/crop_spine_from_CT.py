@@ -42,11 +42,9 @@ def crop_spine_from_ct(input_nifti, mask, shape="original", segmentation_value=4
 
     # Put the segmentation into a numpy array
     mask = binarized_mask.get_fdata()
-    print(binarized_mask.header)
 
     # Put the image into a numpy array
     image = input_nifti.get_fdata()
-    print(input_nifti.header)
 
     # Cut the PET image
     cut_image = image * mask
