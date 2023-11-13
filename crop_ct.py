@@ -28,7 +28,7 @@ if __name__ == "__main__":
         # Condition to execute just for patients not already done
         # if os.path.isdir(os.path.join(save_path, patient_id)):
         #     continue
-        # print("Patient: ", patient_id)
+        print("Patient: ", patient_id)
 
         # # Continue from where it stopped
         # if not ((patient_id == "MPC_206_20160330") | checkpoint):
@@ -59,8 +59,8 @@ if __name__ == "__main__":
                 # Save cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/CT_{function}.nii.gz")
-                print("Saved: ", "CT_" + function + ".nii")
+                nib.save(cut_pet, save_dir + f"/CT_{function}.nii")
+                print("Saved: ", "CT_" + function + ".nii.gz")
 
             # Limit the loops
             # if i == (max_loops - 1):
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         # Condition to execute just for patients not already done
         # if os.path.isdir(os.path.join(save_path, patient_id)):
         #     continue
-        # print("Patient: ", patient_id)
+        print("Patient: ", patient_id)
 
         try:
 
