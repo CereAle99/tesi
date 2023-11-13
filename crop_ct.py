@@ -59,7 +59,7 @@ if __name__ == "__main__":
                 # Save cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/CT_{function}.nii")
+                nib.save(cut_pet, save_dir + f"/CT_{function}.nii.gz")
                 print("Saved: ", "CT_" + function + ".nii")
 
             # Limit the loops
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                 # Saved cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/CT_{function}.nii")
+                nib.save(cut_pet, save_dir + f"/CT_{function}.nii.gz")
 
             # # Limit the loops
             # if i == max_loops:
