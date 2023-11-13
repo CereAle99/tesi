@@ -41,7 +41,7 @@ if __name__ == "__main__":
             patient_path = os.path.join(moose_path1, patient_id)
             label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
             # label_path = os.path.join(patient_path, "Bones.nii.gz")
-            pet_path = os.path.join(data_path, patient_id, "PT.nii")
+            pet_path = os.path.join(data_path, patient_id, "CT.nii")
 
             # Shape the PET image
             for function in shapes:
@@ -52,9 +52,9 @@ if __name__ == "__main__":
 
                 # Perform the cropping
                 cut_pet = crop_spine_from_ct(input_nifti=ct_file,
-                                           mask=segmentation_file,
-                                           shape=function,
-                                           segmentation_value=41)
+                                             mask=segmentation_file,
+                                             shape=function,
+                                             segmentation_value=41)
 
                 # Save cropped PET
                 save_dir = os.path.join(save_path, patient_id)
@@ -100,7 +100,7 @@ if __name__ == "__main__":
 
             # Get PET and segmentation path
             patient_path = os.path.join(moose_path2, patient_id)
-            ct_path = os.path.join(data_path, patient_id, "PT2.nii")
+            ct_path = os.path.join(data_path, patient_id, "CT.nii")
 
             # # Find the label folder for moose 2.0
             start_seq = "moosez"
@@ -117,9 +117,9 @@ if __name__ == "__main__":
 
                 # Perform the cropping
                 cut_pet = crop_spine_from_ct(input_nifti=ct_file,
-                                           mask=segmentation_file,
-                                           shape=function,
-                                           segmentation_value=15)
+                                             mask=segmentation_file,
+                                             shape=function,
+                                             segmentation_value=15)
 
                 # Saved cropped PET
                 save_dir = os.path.join(save_path, patient_id)
