@@ -63,7 +63,7 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     # CT header fixing
     ct_header['dim'][1:4] = pet_image.shape
     ct_affine[0, 0] = -(ct_header['pixdim'][1] - pixel_displacement[0])
-    ct_affine[1, 1] = -(ct_header['pixdim'][2] - pixel_displacement[1])
+    ct_affine[1, 1] = (ct_header['pixdim'][2] - pixel_displacement[1])
     ct_affine[2, 2] = (ct_header['pixdim'][3] - pixel_displacement[2])
     ct_affine[0, 3] = ct_header['qoffset_x'] + side_x * (-pet_affine[0, 0])
     ct_affine[1, 3] = ct_header['qoffset_y'] + side_y * (-pet_affine[1, 1])
