@@ -27,13 +27,13 @@ def crop_spine_from_ct(input_nifti, mask, shape="original", segmentation_value=4
     # Apply shape function on segmentation
     if shape == "fill_holes":
         print(shape)
-        mask = fill_spinal_holes(mask, 3, 3)
+        binarized_mask = fill_spinal_holes(binarized_mask, 3, 3)
     elif shape == "dilation":
         print(shape)
-        mask = dilate_spine(mask, 3, True)
+        binarized_mask = dilate_spine(binarized_mask, 3, True)
     elif shape == "cylinder":
         print(shape)
-        mask = spine_as_cylinder(mask, 3)
+        binarized_mask = spine_as_cylinder(binarized_mask, 3)
     elif shape == "original":
         print(shape)
     else:
