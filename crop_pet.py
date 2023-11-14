@@ -58,8 +58,8 @@ if __name__ == "__main__":
                 # Save cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
-                print("Saved: ", "PT_" + function + ".nii")
+                nib.save(cut_pet, save_dir + f"/PT_{function}.nii.gz")
+                print("Saved: ", "PT_" + function + ".nii.gz")
 
             # Limit the loops
             # if i == (max_loops - 1):
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
             # Get PET and segmentation path
             patient_path = os.path.join(moose_path2, patient_id)
-            pet_path = os.path.join(data_path, patient_id, "PT2.nii")
+            pet_path = os.path.join(data_path, patient_id, "PT.nii")
 
             # # Find the label folder for moose 2.0
             # start_seq = "moosez"
@@ -122,7 +122,8 @@ if __name__ == "__main__":
                 # Saved cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
+                nib.save(cut_pet, save_dir + f"/PT_{function}.nii.gz")
+                print("Saved: ", f"PT_{function}.nii.gz")
 
             # # Limit the loops
             # if i == max_loops:
@@ -190,8 +191,9 @@ if __name__ == "__main__":
     #             # Saved cropped PET
     #             save_dir = os.path.join(save_path, patient_id)
     #             os.makedirs(save_dir, exist_ok=True)
-    #             nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
-    #
+    #             nib.save(cut_pet, save_dir + f"/PT_{function}.nii.gz")
+    #             print("Saved:", f"PT_{function}.nii.gz")
+
     #         # # Limit the loops
     #         # if i == max_loops:
     #         #     break
