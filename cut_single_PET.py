@@ -6,7 +6,7 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 if __name__ == "__main__":
 
     # All patients path
-    shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
+    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
     mm_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma"
 
     moose_path1 = mm_path + "/Original/Moose_output/moose_1"
@@ -32,25 +32,24 @@ if __name__ == "__main__":
     # image_path = os.path.join(current_path, "data", "test_PET", patient_id, "PT.nii")
     # save_path = os.path.join(current_path, "data", "test_PET", patient_id)
 
-    label_path = os.path.join(moose_path1, patient_id, "/MOOSE-P1/labels/sim_space/similarity-space/", "Spine.nii.gz")
-    image_path = os.path.join(original_data_path, patient_id, "CT.nii")
-    save_path = os.path.join(cropping_sick_path, patient_id)
+    label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
+    image_path = os.path.join(moose_path1, patient_id, "CT", "CT_0000.nii.gz")
+    save_path = cropping_sick_path
 
     segmentation_file = nib.load(label_path)
     image_file = nib.load(image_path)
 
     cut_pet = crop_spine_from_ct(image_file, segmentation_file, "cylinder", 41)
-
     nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_cylinder.nii.gz"))
 
+    segmentation_file = nib.load(label_path)
     cut_pet = crop_spine_from_ct(image_file, segmentation_file, "original", 41)
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_original.nii.gz"))
 
-    nib.save(cut_pet, os.path.join(save_path, "CT_original.nii.gz"))
-
+    segmentation_file = nib.load(label_path)
     cut_pet = crop_spine_from_ct(image_file, segmentation_file, "dilation", 41)
-
     nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_dilation.nii.gz"))
 
+    segmentation_file = nib.load(label_path)
     cut_pet = crop_spine_from_ct(image_file, segmentation_file, "fill_holes", 41)
-
     nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_fill_holes.nii.gz"))
