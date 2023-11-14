@@ -42,8 +42,6 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     # Make PET image and spine segmentation image compatibles
     resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask)
     print("done resizing")
-    print(resized_pet.header)
-    print(resized_mask.header)
 
     # Put the segmentation into a numpy array
     mask = resized_mask.get_fdata()
