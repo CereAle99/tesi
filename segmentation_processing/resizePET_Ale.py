@@ -44,9 +44,8 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
 
     # Image axis orientations
     x_orientation = np.sign(pet_header['srow_x'][0])
-    y_orientation = np.sign(pet_header['srow_x'][1])
-    z_orientation = np.sign(pet_header['srow_x'][2])
-
+    y_orientation = np.sign(pet_header['srow_y'][1])
+    z_orientation = np.sign(pet_header['srow_z'][2])
     # Managing the offset
     pet_header['qoffset_x'] = (pet_header['qoffset_x']
                                - x_orientation * (pet_header['pixdim'][1] / 2)
@@ -66,11 +65,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     pet_affine[0, 3] = pet_header['qoffset_x']
     pet_affine[1, 3] = pet_header['qoffset_y']
     pet_affine[2, 3] = pet_header['qoffset_z']
-
-    # CT image axis orientation
-    x_orientation = np.sign(ct_header['srow_x'][0])
-    y_orientation = np.sign(ct_header['srow_x'][1])
-    z_orientation = np.sign(ct_header['srow_x'][2])
 
     # CT header fixing
     ct_header['dim'][1:4] = pet_image.shape
