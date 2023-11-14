@@ -19,19 +19,18 @@ if __name__ == "__main__":
             dir_sick_patient = os.path.join(save_path, patient_id)
             if os.path.isdir(dir_sick_patient):
                 nifti_files = [file_name for file_name in os.listdir(dir_sick_patient) if file_name.endswith(".nii")]
+                print(f"List of files to converted in the folder {patient_id}: {nifti_files}")
                 for file in nifti_files:
                     file_path = os.path.join(dir_sick_patient, file)
                     print("\nPath towards the NIfTI file:  ", file_path)
                     nifti = nib.load(file_path)
+                    print("load")
                     nib.save(nifti, file_path + ".gz")
-                    os.remove(file_path)
-
-
+                    print("save")
+                    # os.remove(file_path)
+                    # print("removed")
             else:
-                nifti_files = "None"
-            print(f"List of files to converted in the folder {patient_id}: {nifti_files}")
-
-            break  # Da togliere!!!
+                pass
 
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
