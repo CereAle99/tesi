@@ -20,7 +20,7 @@ if __name__ == "__main__":
     current_path = os.getcwd()
 
     # patient_id = "PETCT_3cd49210eb"
-    patient_id = "P1"
+    patient_id = "MPC_343_20191108"
 
     # Used paths
     # label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-30-22-48-23",
@@ -32,24 +32,28 @@ if __name__ == "__main__":
     # image_path = os.path.join(current_path, "data", "test_PET", patient_id, "PT.nii")
     # save_path = os.path.join(current_path, "data", "test_PET", patient_id)
 
-    label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
-    image_path = os.path.join(moose_path1, patient_id, "CT", "CT_0000.nii.gz")
+    # label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
+    # image_path = os.path.join(moose_path1, patient_id, "CT", "CT_0000.nii.gz")
+    # save_path = cropping_sick_path
+
+    label_path = os.path.join(moose_path2, patient_id, "moosez-clin_ct_bones_v1-2023-09-28-18-33-45", "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+    image_path = os.path.join(original_data_path, patient_id, "PT2.nii")
     save_path = cropping_sick_path
 
     segmentation_file = nib.load(label_path)
     image_file = nib.load(image_path)
 
-    cut_pet = crop_spine_from_ct(image_file, segmentation_file, "cylinder", 41)
-    nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_cylinder.nii.gz"))
+    cut_pet = crop_spine_shape(image_file, segmentation_file, "cylinder", 15)
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PET_cylinder.nii.gz"))
 
     segmentation_file = nib.load(label_path)
-    cut_pet = crop_spine_from_ct(image_file, segmentation_file, "original", 41)
-    nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_original.nii.gz"))
+    cut_pet = crop_spine_shape(image_file, segmentation_file, "original", 15)
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PET_original.nii.gz"))
 
     segmentation_file = nib.load(label_path)
-    cut_pet = crop_spine_from_ct(image_file, segmentation_file, "dilation", 41)
-    nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_dilation.nii.gz"))
+    cut_pet = crop_spine_shape(image_file, segmentation_file, "dilation", 15)
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PET_dilation.nii.gz"))
 
     segmentation_file = nib.load(label_path)
-    cut_pet = crop_spine_from_ct(image_file, segmentation_file, "fill_holes", 41)
-    nib.save(cut_pet, os.path.join(save_path, patient_id, "CT_fill_holes.nii.gz"))
+    cut_pet = crop_spine_shape(image_file, segmentation_file, "fill_holes", 15)
+    nib.save(cut_pet, os.path.join(save_path, patient_id, "PET_fill_holes.nii.gz"))
