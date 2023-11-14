@@ -16,9 +16,7 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
 
     # Load the nifti files header and image array
     pet_header = pet_nifti.header
-    print(pet_header)
     ct_header = ct_nifti.header
-    print(ct_header)
     pet_affine = pet_nifti.affine
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
