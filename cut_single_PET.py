@@ -20,9 +20,9 @@ if __name__ == "__main__":
     current_path = os.getcwd()
 
     # patient_id = "PETCT_3cd49210eb"
-    # patient_id = "PETCT_ca16242e89"
+    patient_id = "PETCT_ca16242e89"
     # patient_id = "PETCT_5e339b2ecf"
-    patient_id = "PETCT_e00c98b415"
+    # patient_id = "PETCT_e00c98b415"
 
     # Used paths
 
@@ -31,20 +31,20 @@ if __name__ == "__main__":
     # image_path = os.path.join(pet_healthy, patient_id, "8.000000-PET_corr.-68079_PET_corr._20021229083413_8.nii")
     # save_path = cropping_healthy_path
 
-    # label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-14-31-04",
-    #                           "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
-    # image_path = os.path.join(pet_healthy, patient_id, "8.000000-PET_corr.-66408_PET_corr._20020913094937_8.nii")
-    # save_path = cropping_healthy_path
+    label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-14-31-04",
+                              "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
+    image_path = os.path.join(pet_healthy, patient_id, "8.000000-PET_corr.-66408_PET_corr._20020913094937_8.nii")
+    save_path = cropping_healthy_path
 
     # label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-08-59-31",
     #                           "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
     # image_path = os.path.join(pet_healthy, patient_id, "9.000000-PET_corr.-44689_PET_corr._20051111121448_9.nii")
     # save_path = cropping_healthy_path
 
-    label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-17-30-38",
-                              "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
-    image_path = os.path.join(pet_healthy, patient_id, "5.000000-PET_corr.-91812_PET_corr._20021019123810_5.nii")
-    save_path = cropping_healthy_path
+    # label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-17-30-38",
+    #                           "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
+    # image_path = os.path.join(pet_healthy, patient_id, "5.000000-PET_corr.-91812_PET_corr._20021019123810_5.nii")
+    # save_path = cropping_healthy_path
 
 
 
