@@ -9,17 +9,19 @@ dicom_path = shared_dir_path + patients_folder
 # print(os.listdir(dicom_path)[0])
 
 # Last file completely converted
-checkpoint = 94
+checkpoint = -1
+single_pet = "PETCT_ca16242e89"
 
 # Loop for patients folders
 for num, patient_id in enumerate(os.listdir(dicom_path)):
     print(num)
-    if num <= checkpoint:
+
+    if (num <= checkpoint) | (not patient_id == single_pet):
         continue
 
     print(patient_id)
     patient_path = os.path.join(dicom_path, patient_id)
-    images_path = os.path.join(patient_path, os.listdir(patient_path)[0])  # may have more sets of images (?)
+    images_path = os.path.join(patient_path, os.listdir(patient_path)[1])  # may have more sets of images (?)
 
     # Imaging name dict
     output_filename = {0: "CT.nii",
