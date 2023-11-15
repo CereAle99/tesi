@@ -13,6 +13,7 @@ checkpoint = -1
 single_pet = "PETCT_ca16242e89"
 
 # Loop for patients folders
+
 for num, patient_id in enumerate(os.listdir(dicom_path)):
     print(num)
 
@@ -21,7 +22,9 @@ for num, patient_id in enumerate(os.listdir(dicom_path)):
 
     print(patient_id)
     patient_path = os.path.join(dicom_path, patient_id)
-    images_path = os.path.join(patient_path, os.listdir(patient_path)[1])  # may have more sets of images (?)
+    imageset_list = [directory for directory in os.listdir(dicom_path)
+                     if os.path.isdir(os.path.join(dicom_path, directory))]
+    images_path = os.path.join(patient_path, imageset_list[1])  # "1" because may have more sets of images (?)
 
     # Imaging name dict
     output_filename = {0: "CT.nii",
