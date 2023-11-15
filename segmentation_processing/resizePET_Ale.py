@@ -92,11 +92,10 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
 
     print("\n", pet_header, "\n")
     print("\n", ct_header, "\n")
-    print("\n", resize_ratio, "\n")
     print("\n", pet_affine, "\n")
     print("\n", ct_affine, "\n")
     print("\n", pet_image.shape, "\n")
-    print("\n", ct_image_resized, "\n")
+    print("\n", ct_image_resized.shape, "\n")
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
