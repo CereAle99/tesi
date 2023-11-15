@@ -21,6 +21,7 @@ if __name__ == "__main__":
 
     # patient_id = "PETCT_3cd49210eb"
     # patient_id = "PETCT_ca16242e89"
+    # patient_id = "PETCT_5e339b2ecf"
     patient_id = "PETCT_e00c98b415"
 
     # Used paths
