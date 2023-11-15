@@ -20,21 +20,21 @@ if __name__ == "__main__":
     current_path = os.getcwd()
 
     # patient_id = "PETCT_3cd49210eb"
-    patient_id = "MPC_343_20191108"
+    patient_id = "PETCT_ca16242e89"
 
     # Used paths
-    # label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-30-22-48-23",
-    #                           "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
-    # image_path = os.path.join(pet_healthy, patient_id, "8.000000-PET_corr.-68079_PET_corr._20021229083413_8.nii")
-    # save_path = os.path.join(current_path, "data", "test_PET")
+    label_path = os.path.join(healthy_segmentations, patient_id, "moosez-clin_ct_bones_v1-2023-10-31-14-31-04",
+                              "segmentations", "CT_Bones_V1_CT_4_gk_pv3_0000.nii.gz")
+    image_path = os.path.join(pet_healthy, patient_id, "8.000000-PET_corr.-66408_PET_corr._20020913094937_8.nii")
+    save_path = os.path.join(current_path, "data", "test_PET")
 
     # label_path = os.path.join(current_path, "data", "test_PET", patient_id, "Spine.nii.gz")
     # image_path = os.path.join(current_path, "data", "test_PET", patient_id, "PT.nii")
     # save_path = os.path.join(current_path, "data", "test_PET", patient_id)
 
-    label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
-    image_path = os.path.join(moose_path1, patient_id, "PET", "PT.nii")
-    save_path = cropping_sick_path
+    # label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
+    # image_path = os.path.join(moose_path1, patient_id, "PET", "PT.nii")
+    # save_path = cropping_sick_path
 
     # label_path = os.path.join(moose_path2, patient_id, "moosez-clin_ct_bones_v1-2023-09-28-18-33-45", "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
     # image_path = os.path.join(original_data_path, patient_id, "PT2.nii")
