@@ -47,13 +47,16 @@ if __name__ == "__main__":
     nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_cylinder.nii.gz"))
 
     segmentation_file = nib.load(label_path)
+    image_file = nib.load(image_path)
     cut_pet = crop_spine_shape(image_file, segmentation_file, "original", 15)
     nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_original.nii.gz"))
 
     segmentation_file = nib.load(label_path)
+    image_file = nib.load(image_path)
     cut_pet = crop_spine_shape(image_file, segmentation_file, "dilation", 15)
     nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_dilation.nii.gz"))
 
     segmentation_file = nib.load(label_path)
+    image_file = nib.load(image_path)
     cut_pet = crop_spine_shape(image_file, segmentation_file, "fill_holes", 15)
     nib.save(cut_pet, os.path.join(save_path, patient_id, "PT_fill_holes.nii.gz"))
