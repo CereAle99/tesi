@@ -197,6 +197,7 @@ if __name__ == "__main__":
                 # Get crop PET max voxel value
                 pet_array = cut_pet.get_fdata()
                 max_value = np.amax(pet_array)
+                print(f"Max value: {max_value}")
                 if max_value < 20:
                     new_line = [patient_id, function, max_value]
                     max_values.loc[len(max_values)] = new_line
