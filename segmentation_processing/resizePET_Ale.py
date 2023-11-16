@@ -16,9 +16,7 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
 
     # Load the nifti files header and image array
     pet_header = pet_nifti.header
-    print(pet_header)
     ct_header = ct_nifti.header
-    print(ct_header)
     pet_affine = pet_nifti.affine
     ct_affine = ct_nifti.affine
     pet_image = pet_nifti.get_fdata()
@@ -26,7 +24,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
 
     # PET resize ratio
     resize_ratio = pet_header['pixdim'][1:4] / ct_header['pixdim'][1:4]
-    print("\n", resize_ratio, "\n")
 
     # PET resizing and his displacement
     pet_image = zoom(pet_image, zoom=resize_ratio, grid_mode=True, mode="grid-constant")
@@ -47,9 +44,6 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     x_orientation = np.sign(pet_header['srow_x'][0])
     y_orientation = np.sign(pet_header['srow_y'][1])
     z_orientation = np.sign(pet_header['srow_z'][2])
-    print("\n", x_orientation, "\n")
-    print("\n", y_orientation, "\n")
-    print("\n", z_orientation, "\n")
 
     # Managing the offset
     pet_header['qoffset_x'] = (pet_header['qoffset_x']
@@ -83,19 +77,11 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     # Evaluate the offset and shift the PET image
     shift_vector = (ct_affine[0:3, 3] - pet_affine[0:3, 3]) / np.abs(np.diag(pet_affine)[0:3])
     pet_image = shift(pet_image, shift_vector, mode="nearest")
-    print("\n", shift_vector, "\n")
 
     # Fix the PET offset
     pet_affine[0, 3] = ct_affine[0, 3]
     pet_affine[1, 3] = ct_affine[1, 3]
     pet_affine[2, 3] = ct_affine[2, 3]
-
-    print("\n", pet_header, "\n")
-    print("\n", ct_header, "\n")
-    print("\n", pet_affine, "\n")
-    print("\n", ct_affine, "\n")
-    print("\n", pet_image.shape, "\n")
-    print("\n", ct_image_resized.shape, "\n")
 
     # CT and PET NIfTI files assembled
     resized_pet = nib.Nifti1Image(pet_image, pet_affine, pet_header)
