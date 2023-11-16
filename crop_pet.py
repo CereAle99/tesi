@@ -1,5 +1,7 @@
 import os
 import nibabel as nib
+import numpy as np
+import pandas as pd
 from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 
 
@@ -154,6 +156,10 @@ if __name__ == "__main__":
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
     save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
 
+    # declare dataframe with the cropped image max values
+    columns = ['patient_id', 'shape', 'max_value']
+    max_values = pd.DataFrame(columns=columns)
+
     # For each patient in folder moose_2
     for patient_id in os.listdir(moose_path):
         # Condition to execute just for patients not already done
@@ -188,11 +194,21 @@ if __name__ == "__main__":
                                            shape=function,
                                            segmentation_value=15)
 
+                # Get crop PET max voxel value
+                pet_array = cut_pet.get_fdata()
+                max_value = np.amax(pet_array)
+                if max_value < 20:
+                    new_line = [patient_id, function, max_value]
+                    max_values.loc[len(max_values)] = new_line
+                    with open(current_path + "/log/cropped_img_max_val.txt", "a") as file:
+                        file.write(f"{patient_id} with function '{function}' has max value: {max_value}\n")
+
                 # Saved cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
                 nib.save(cut_pet, save_dir + f"/PT_{function}.nii.gz")
                 print("Saved:", f"PT_{function}.nii.gz")
+
             break
             # # Limit the loops
             # if i == max_loops:
@@ -216,3 +232,5 @@ if __name__ == "__main__":
             # Write the patient id which had an error
             with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")
+
+    max_values.to_csv('log/dataframe_max_val.csv', index=True)
