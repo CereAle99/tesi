@@ -44,13 +44,13 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     print("done resizing")
 
     # Put the segmentation into a numpy array
-    mask = resized_mask.get_fdata()
+    segmentation = resized_mask.get_fdata()
 
     # Put the image into a numpy array
     image = resized_pet.get_fdata()
 
     # Cut the PET image
-    cut_image = image * mask
+    cut_image = image * segmentation
     print(f"done cutting")
 
     # Save cut image in a NIfTI file
