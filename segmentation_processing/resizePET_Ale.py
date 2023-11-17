@@ -75,8 +75,10 @@ def pet_compatible_to_ct(pet_nifti, ct_nifti):
     ct_affine[2, 3] = ct_header['qoffset_z'] - side_z * (pet_affine[2, 2])
 
     # Evaluate the offset and shift the PET image
-    shift_vector = (ct_affine[0:3, 3] - pet_affine[0:3, 3]) / np.abs(np.diag(pet_affine)[0:3])
-    pet_image = shift(pet_image, shift_vector, mode="nearest")
+    axis_directions = np.array([-x_orientation, -y_orientation, -z_orientation])
+    shift_vector = (ct_affine[0:3, 3] - pet_affine[0:3, 3]) / np.abs(np.diag(pet_affine)[0:3]) * axis_directions
+    print(shift_vector)
+    pet_image = shift(pet_image, shift_vector, mode="constant", cval=0)
 
     # Fix the PET offset
     pet_affine[0, 3] = ct_affine[0, 3]
