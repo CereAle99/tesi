@@ -1,39 +1,37 @@
-import SimpleITK as sitk
 import numpy as np
-from skimage import measure
+import radiomics
+import SimpleITK as sitk
+import os
+import six
+from radiomics import featureextractor, getTestCase
 
-# Step 1: Load the segmented image
-segmentation_image = sitk.ReadImage('segmentation.nii.gz')
 
-# Step 2: Image preprocessing (optional)
+if __name__ == "__main__":
+
+    # Get current path
+    current_path = os.getcwd()
+
+    # Load the image
+    image_path = os.path.join(current_path, "data", "path_all_tua_immagine.nii")
+    imageName = sitk.ReadImage(image_path)
+    mask_path = os.path.join(current_path, "data", "path_all_tua_immagine.nii")
+    maskName = sitk.ReadImage(mask_path)
+
+    # Set the features extractor
+    extr_params = os.path.join(current_path, "parameters", "feat_extr_test.yaml")
+    extractor = radiomics.featureextractor.RadiomicsFeatureExtractor(extr_params)
+
+    result = extractor.execute(imageName, maskName)
+    for key, val in six.iteritems(result):
+        print("\t%s: %s" % (key, val))
+
+    result = extractor.execute(imageName, maskName, voxelBased=True)
+    for key, val in six.iteritems(result):
+        if isinstance(val, sitk.Image):  # Feature map
+            sitk.WriteImage(val, key + '.nrrd', True)
+            print("Stored feature %s in %s" % (key, key + ".nrrd"))
+        else:  # Diagnostic information
+            print("\t%s: %s" % (key, val))
 
 
-# Step 3: Extract features
-# Extract lesion volume features
-label_statistics = sitk.LabelStatisticsImageFilter()
-label_statistics.Execute(segmentation_image, segmentation_image)
 
-volume = label_statistics.GetSum(1)  # Volume of the region labeled as 1 (lesions)
-
-# Extract geometric features
-# Calculate area and perimeter
-label_map = sitk.LabelImageFilter().Execute(segmentation_image)
-labels = np.unique(sitk.GetArrayFromImage(label_map))
-for label in labels[1:]:  # Ignore the background label (0)
-    region = (sitk.GetArrayFromImage(label_map) == label)
-    area = np.sum(region)  # Calculate area
-    contours = measure.find_contours(region, 0.5)
-    perimeter = sum([len(contour) for contour in contours])  # Calculate perimeter
-    # You can record or further process these geometric measures.
-
-# Extract intensity statistics
-intensity_statistics = sitk.StatisticsImageFilter()
-intensity_statistics.Execute(segmentation_image)
-mean_intensity = intensity_statistics.GetMean()  # Mean intensity within the region labeled as 1
-
-# Extract texture features (e.g., contrast)
-gray_image = sitk.GetArrayFromImage(segmentation_image)
-contrast = sitk.GradientMagnitudeRecursiveGaussian(segmentation_image, sigma=1.0)
-contrast_statistics = sitk.LabelStatisticsImageFilter()
-contrast_statistics.Execute(contrast, label_map)
-contrast_mean = contrast_statistics.GetMean(1)  # Mean contrast within the region labeled as 1
