@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # # Define an iteration index and loop limit
     # i = 0
     # max_loops = 4
-    # checkpoint = False
+    checkpoint = False
 
     # # For each patient in folder moose_1
     # for patient_id in os.listdir(moose_path1):
@@ -165,6 +165,12 @@ if __name__ == "__main__":
         # Condition to execute just for patients not already done
         # if os.path.isdir(os.path.join(save_path, patient_id)):
         #     continue
+
+        # Continue from where it stopped
+        if not ((patient_id == "PETCT_94cc0dac49") | checkpoint):
+            continue
+        checkpoint = True
+
         print("Patient: ", patient_id)
 
         try:
