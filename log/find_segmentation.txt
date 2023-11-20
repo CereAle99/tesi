@@ -1,0 +1,3 @@
+MPC_296_20190708: Unknown error (Compressed file ended before the end-of-stream marker was reached) - don't know, try doing it again
+MPC_242_20141006: Unknown error (Expected 575197184 bytes, got 208490496 bytes from 
+ - could the file be damaged?) - !!have to redo the PT_dilation file!!
