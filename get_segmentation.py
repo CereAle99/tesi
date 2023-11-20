@@ -17,7 +17,7 @@ if __name__ == "__main__":
     patients = os.listdir(sick_patients_path)
     index = patients.index("MPC_149_20060705")
 
-    # For each patient in folder moose_1
+    # For each patient in folder sick_patients
     for patient_id in patients[index:]:
         print("Patient: ", patient_id)
         try:
