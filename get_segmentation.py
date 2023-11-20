@@ -12,8 +12,13 @@ if __name__ == "__main__":
     sick_patients_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     healthy_patients_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
 
+    # Checkpoint last execution
+    next_start = "MPC_149_20060705"
+    patients = os.listdir(sick_patients_path)
+    index = patients.index("MPC_149_20060705")
+
     # For each patient in folder moose_1
-    for patient_id in os.listdir(sick_patients_path):
+    for patient_id in patients[index:]:
         print("Patient: ", patient_id)
         try:
             sick_patient = os.path.join(sick_patients_path, patient_id)
