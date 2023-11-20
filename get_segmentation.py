@@ -1,7 +1,5 @@
 import nibabel as nib
-import numpy as np
 import os
-import SimpleITK as sitk
 
 if __name__ == "__main__":
 
