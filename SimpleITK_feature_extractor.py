@@ -1,10 +1,9 @@
-import numpy as np
 import pandas as pd
 import radiomics
 import SimpleITK as sitk
 import os
 import six
-from radiomics import featureextractor, getTestCase
+from radiomics import featureextractor
 
 
 if __name__ == "__main__":
@@ -18,13 +17,13 @@ if __name__ == "__main__":
 
     # Create the dataframe where to store all the features
 
-    features = pd.DataFrame()
+    feats_dataframe = pd.DataFrame()
 
     for patient_id in os.listdir(sick_patients_path):
         print("Patient: ", patient_id)
 
         # Select the pet images in patient folder
-        pet_files = [pet for pet in os.path.join(sick_patients_path, patient_id) if pet.startswith("PT")]
+        pet_files = [pet for pet in os.listdir(os.path.join(sick_patients_path, patient_id)) if pet.startswith("PT")]
 
         for pet_file in pet_files:
 
@@ -38,18 +37,24 @@ if __name__ == "__main__":
             extr_params = os.path.join(current_path, "parameters", "feat_extr_test.yaml")
             extractor = radiomics.featureextractor.RadiomicsFeatureExtractor(extr_params)
 
+            # Add new line in features dataset
             new_line = {"patient_id": patient_id, "mask_shape": pet_file[3:-7]}
+
+            # Start the feature extraction
             result = extractor.execute(imageName, maskName)
             for key, val in six.iteritems(result):
+                # Add feature value to the features dataset
                 new_line[key] = val
                 print(f"Feature {key}: {val}")
-            features = features.append(new_line, ignore_index=True)
-            print("Stored features in ")
+
+            # Add patient features line to the features dataframe
+            feats_dataframe = feats_dataframe._append(new_line, ignore_index=True)
+            print(f"Patient {patient_id} features stored in dataframe\n")
             break
             # result = extractor.execute(imageName, maskName, voxelBased=True)
         break
-
-    features.to_csv(os.path.join(current_path, "data", "PT_rad_feats.csv"))
+    # Features dataframe save
+    feats_dataframe.to_csv(os.path.join(current_path, "data", "PT_rad_feats.csv"))
 
 
 
