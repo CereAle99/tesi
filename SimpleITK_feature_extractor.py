@@ -4,9 +4,14 @@ import SimpleITK as sitk
 import os
 import six
 from radiomics import featureextractor
+import logging
 
 
 if __name__ == "__main__":
+
+    # set pyradiomics verbose to False
+    logger = logging.getLogger("radiomics")
+    logger.setLevel(logging.ERROR)
 
     # Get current path and all useful paths
     current_path = os.getcwd()
@@ -53,6 +58,3 @@ if __name__ == "__main__":
 
     # Features dataframe save
     feats_dataframe.to_csv(os.path.join(current_path, "data", "PT_rad_feats.csv"))
-
-
-
