@@ -16,7 +16,6 @@ if __name__ == "__main__":
     healthy_patients_path = segmentations_dir + "healthy_patients"
 
     # Create the dataframe where to store all the features
-
     feats_dataframe = pd.DataFrame()
 
     for patient_id in os.listdir(sick_patients_path):
@@ -45,14 +44,13 @@ if __name__ == "__main__":
             for key, val in six.iteritems(result):
                 # Add feature value to the features dataset
                 new_line[key] = val
-                print(f"Feature {key}: {val}")
+                # print(f"Feature {key}: {val}")
 
             # Add patient features line to the features dataframe
             feats_dataframe = feats_dataframe._append(new_line, ignore_index=True)
             print(f"Patient {patient_id} features stored in dataframe\n")
-            break
             # result = extractor.execute(imageName, maskName, voxelBased=True)
-        break
+
     # Features dataframe save
     feats_dataframe.to_csv(os.path.join(current_path, "data", "PT_rad_feats.csv"))
 
