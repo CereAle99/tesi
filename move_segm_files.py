@@ -2,6 +2,7 @@ import os
 import nibabel as nib
 import numpy as np
 import pandas as pd
+import copy
 from segmentation_processing.binarize import binarize
 from segmentation_processing.spine_outofthe_cylinder import spine_as_cylinder
 from segmentation_processing.fill_spine import fill_spinal_holes
@@ -36,19 +37,17 @@ if __name__ == "__main__":
             # Load label and perform the shaping
             mask = nib.load(label_path)
             mask = binarize(mask, 41)
-            spine_filled = fill_spinal_holes(mask, 3, 3)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 41)
-            spine_dilated = dilate_spine(mask, 3, True)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 41)
-            spine_cylinder = spine_as_cylinder(mask, 3)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 41)
+            segmentation = copy.deepcopy(mask)
+            spine_filled = fill_spinal_holes(segmentation, 3, 3)
+            segmentation = copy.deepcopy(mask)
+            spine_dilated = dilate_spine(segmentation, 3, True)
+            segmentation = copy.deepcopy(mask)
+            spine_cylinder = spine_as_cylinder(segmentation, 3)
+            segmentation = copy.deepcopy(mask)
 
             # Save cropped PET
             save_dir = os.path.join(save_path, patient_id)
-            nib.save(mask, save_dir + "/mask_CT_original.nii.gz")
+            nib.save(segmentation, save_dir + "/mask_CT_original.nii.gz")
             nib.save(spine_filled, save_dir + "/mask_CT_fill_holes.nii.gz")
             nib.save(spine_dilated, save_dir + "/mask_CT_dilation.nii.gz")
             nib.save(spine_cylinder, save_dir + "/mask_CT_cylinder.nii.gz")
