@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     # All patients path
     current_path = os.getcwd()
-    shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
+    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
     moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_1"
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/PET-CT"
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             patient_path = os.path.join(moose_path1, patient_id)
             label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
             # label_path = os.path.join(patient_path, "Bones.nii.gz")
-    
+
             # Load label
 
 
