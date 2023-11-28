@@ -24,12 +24,16 @@ if __name__ == "__main__":
     for patient_id in os.listdir(moose_path1):
         print("Patient: ", patient_id)
     
+        if patient_id != "MPC_249_20130306":
+            continue
+
+
         try:
             # Get label path
             label_folder = "labels/sim_space/similarity-space"
             patient_path = os.path.join(moose_path1, patient_id)
-            label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
-            # label_path = os.path.join(patient_path, "Bones.nii.gz")
+            # label_path = os.path.join(patient_path, "MOOSE-" + patient_id, label_folder, "Spine.nii.gz")
+            label_path = os.path.join(patient_path, "Bones_CT.nii.gz")
 
             # Load label
 
@@ -76,9 +80,10 @@ if __name__ == "__main__":
     
     # For each patient in folder moose_2
     for patient_id in os.listdir(moose_path2):
-        # Condition to execute just for patients not already done
-        if os.path.isdir(os.path.join(save_path, patient_id)):
+        
+        if patient_id != "MPC_249_20130306":
             continue
+
         print("Patient: ", patient_id)
     
         try:
