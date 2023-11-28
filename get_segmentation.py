@@ -18,12 +18,16 @@ if __name__ == "__main__":
     index = patients.index("MPC_149_20060705")
 
     # For each patient in folder sick_patients
-    for patient_id in patients[index:]:
+    for patient_id in patients:
         print("Patient: ", patient_id)
+
+        if patient_id != "MPC_224_20160118":
+            continue
+
         try:
             sick_patient = os.path.join(sick_patients_path, patient_id)
             if os.path.isdir(sick_patient):
-                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.endswith(".nii.gz")]
+                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.startswith("PT")]
                 print(f"List of files in the folder {patient_id}: {nifti_files}")
                 for file in nifti_files:
                     file_path = os.path.join(sick_patient, file)
