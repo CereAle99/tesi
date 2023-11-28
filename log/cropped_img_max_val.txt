@@ -1,2 +1,26 @@
 PET image max values:
 
+PETCT_af119148fe with function 'original' has max value: 0.0
+PETCT_af119148fe with function 'fill_holes' has max value: 0.0
+PETCT_af119148fe with function 'dilation' has max value: 0.0
+PETCT_af119148fe with function 'cylinder' has max value: 0.0
+PETCT_ae96f738c0 with function 'original' has max value: 0.0
+PETCT_ae96f738c0 with function 'fill_holes' has max value: 0.0
+PETCT_ae96f738c0 with function 'dilation' has max value: 0.0
+PETCT_ae96f738c0 with function 'cylinder' has max value: 0.0
+PETCT_f8314eb3f7 with function 'original' has max value: 0.0
+PETCT_f8314eb3f7 with function 'fill_holes' has max value: 0.0
+PETCT_f8314eb3f7 with function 'dilation' has max value: 0.0
+PETCT_f8314eb3f7 with function 'cylinder' has max value: 0.0
+PETCT_2716c9bfff with function 'original' has max value: 0.0
+PETCT_2716c9bfff with function 'fill_holes' has max value: 0.0
+PETCT_2716c9bfff with function 'dilation' has max value: 0.0
+PETCT_2716c9bfff with function 'cylinder' has max value: 0.0
+PETCT_7faf36a152 with function 'original' has max value: 0.0
+PETCT_7faf36a152 with function 'fill_holes' has max value: 0.0
+PETCT_7faf36a152 with function 'dilation' has max value: 0.0
+PETCT_7faf36a152 with function 'cylinder' has max value: 0.0
+PETCT_2f9aec0275 with function 'original' has max value: 0.0
+PETCT_2f9aec0275 with function 'fill_holes' has max value: 0.0
+PETCT_2f9aec0275 with function 'dilation' has max value: 0.0
+PETCT_2f9aec0275 with function 'cylinder' has max value: 0.0
