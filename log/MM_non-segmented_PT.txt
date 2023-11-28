@@ -1,0 +1,7 @@
+FileNotFoundError for patient:  MPC_140_20171013 segmented just the feet
+FileNotFoundError for patient:  MPC_136_20150818_NOTDONE_TOOLONG no segmentation
+FileNotFoundError for patient:  MPC_285_20140304
+FileNotFoundError for patient:  MPC_3464_20211122
+FileNotFoundError for patient:  MPC_381_20060908
+FileNotFoundError for patient:  MPC_1402_20171013 segmented CT.nii which is just feet, CT1.nii is whole body
+FileNotFoundError for patient:  MPC_2442_20190129 segmented CT.nii which is just feet, CT3.nii is whole body

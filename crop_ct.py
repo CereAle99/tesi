@@ -192,7 +192,7 @@ if __name__ == "__main__":
                 # Saved cropped PET
                 save_dir = os.path.join(save_path, patient_id)
                 os.makedirs(save_dir, exist_ok=True)
-                nib.save(cut_pet, save_dir + f"/PT_{function}.nii")
+                nib.save(cut_pet, save_dir + f"/CT_{function}.nii.gz")
 
             # # Limit the loops
             # if i == max_loops:
@@ -202,17 +202,17 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("FileNotFoundError for patient: ", patient_id)
             # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
                 file.write(f"{patient_id}: FileNotFoundError\n")
 
         except StopIteration:
             print("StopIteration for patient: ", patient_id)
             # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
                 file.write(f"{patient_id}: StopIteration\n")
 
         except Exception as e:
             print(f"Unknown error ({e}) for patient: ", patient_id)
             # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_report.txt", "a") as file:
+            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
                 file.write(f"{patient_id}: Unknown error ({e})\n")

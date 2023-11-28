@@ -6,7 +6,7 @@ from segmentation_processing.crop_spine_from_PET import crop_spine_shape
 if __name__ == "__main__":
 
     # All patients path
-    shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
+    shared_dir_path = "/run/user/1000/gvfs/afp-volume:host=RackStation.local,user=aceresi,volume=Genomed"
     mm_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma"
 
     moose_path1 = mm_path + "/Original/Moose_output/moose_1"
@@ -23,7 +23,8 @@ if __name__ == "__main__":
     # patient_id = "PETCT_ca16242e89"
     # patient_id = "PETCT_5e339b2ecf"
     # patient_id = "PETCT_e00c98b415"
-    patient_id = "MPC_343_20191108"
+    # patient_id = "MPC_343_20191108"
+    patient_id = "MPC_2442_20190129"
 
     # Used paths
 
@@ -47,18 +48,20 @@ if __name__ == "__main__":
     # image_path = os.path.join(pet_healthy, patient_id, "5.000000-PET_corr.-91812_PET_corr._20021019123810_5.nii")
     # save_path = cropping_healthy_path
 
-
-
     # label_path = os.path.join(current_path, "data", "test_PET", patient_id, "Spine.nii.gz")
     # image_path = os.path.join(current_path, "data", "test_PET", patient_id, "PT.nii")
     # save_path = os.path.join(current_path, "data", "test_PET", patient_id)
 
     # label_path = os.path.join(moose_path1, patient_id, "MOOSE-P1/labels/sim_space/similarity-space", "Spine.nii.gz")
-    # image_path = os.path.join(moose_path1, patient_id, "PET", "PT.nii")
+    # image_path = os.path.join(original_data_path, patient_id, "PT2.nii")
     # save_path = cropping_sick_path
 
-    label_path = os.path.join(moose_path2, patient_id, "moosez-clin_ct_bones_v1-2023-09-28-18-33-45", "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
-    image_path = os.path.join(original_data_path, patient_id, "PT2.nii")
+    # label_path = os.path.join(moose_path2, patient_id, "moosez-clin_ct_bones_v1-2023-10-03-11-03-05", "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
+    # image_path = os.path.join(original_data_path, patient_id, "PT2.nii")
+    # save_path = cropping_sick_path
+
+    label_path = os.path.join(moose_path2, patient_id, "Bones.nii.gz")
+    image_path = os.path.join(original_data_path, patient_id, "PT.nii")
     save_path = cropping_sick_path
 
     segmentation_file = nib.load(label_path)

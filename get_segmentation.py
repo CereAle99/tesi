@@ -1,7 +1,5 @@
 import nibabel as nib
-import numpy as np
 import os
-import SimpleITK as sitk
 
 if __name__ == "__main__":
 
@@ -14,13 +12,22 @@ if __name__ == "__main__":
     sick_patients_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
     healthy_patients_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
 
-    # For each patient in folder moose_1
-    for patient_id in os.listdir(sick_patients_path):
+    # Checkpoint last execution
+    next_start = "MPC_149_20060705"
+    patients = os.listdir(sick_patients_path)
+    index = patients.index("MPC_149_20060705")
+
+    # For each patient in folder sick_patients
+    for patient_id in patients:
         print("Patient: ", patient_id)
+
+        if patient_id != "MPC_224_20160118":
+            continue
+
         try:
             sick_patient = os.path.join(sick_patients_path, patient_id)
             if os.path.isdir(sick_patient):
-                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.endswith(".nii.gz")]
+                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.startswith("PT")]
                 print(f"List of files in the folder {patient_id}: {nifti_files}")
                 for file in nifti_files:
                     file_path = os.path.join(sick_patient, file)
