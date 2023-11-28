@@ -1,0 +1,86 @@
+Original:
+
+MPC_296_20190708:  (Exception thrown in SimpleITK ImageFileReader_Execute: /home/conda/feedstock_root/build_artifacts/libsimpleitk_1698943771502/work/Code/IO/src/sitkImageReaderBase.cxx:97:
+sitk::ERROR: The file "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients/MPC_296_20190708/mask_PT_original.nii.gz" does not exist.)
+MPC_3298_20210524:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_249_20130306:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_280_20110908:  (Calculation of GLCM Failed.)
+MPC_145_20081110: segmentation fault
+MPC_294_20090709: segmentation fault
+MPC_174_20110112: segmentation fault
+MPC_3025_20200131:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3350_20210722:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+
+MPC_1402_20171013:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_2442_20190129:  (No labels found in this mask (i.e. nothing is segmented)!)
+
+
+Fill_holes:
+
+
+MPC_296_20190708:  (Exception thrown in SimpleITK ImageFileReader_Execute: /home/conda/feedstock_root/build_artifacts/libsimpleitk_1698943771502/work/Code/IO/src/sitkImageReaderBase.cxx:97:
+sitk::ERROR: The file "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients/MPC_296_20190708/mask_PT_fill_holes.nii.gz" does not exist.)
+MPC_270_20180105:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_331_20160905:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_308_20170620:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_283_20141027:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3345_20210624:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_249_20130306:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_330_20190723:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_280_20110908:  (Calculation of GLCM Failed.)
+MPC_145_20081110: segmentation fault
+MPC_294_20090709: segmentation fault
+MPC_174_20110112: segmentation fault
+MPC_375_20170828:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_363_20180119:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3025_20200131:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_1286_20210402:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3350_20210722:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3349_20210715:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_272_20170103:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_296_20161026:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_367_20160905:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_224_20160118:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_1402_20171013:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_2442_20190129:  (No labels found in this mask (i.e. nothing is segmented)!)
+P1:  (No labels found in this mask (i.e. nothing is segmented)!)
+
+
+
+dilation:
+
+
+MPC_296_20190708:  (Exception thrown in SimpleITK ImageFileReader_Execute: /home/conda/feedstock_root/build_artifacts/libsimpleitk_1698943771502/work/Code/IO/src/sitkImageReaderBase.cxx:97:
+sitk::ERROR: The file "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients/MPC_296_20190708/mask_PT_dilation.nii.gz" does not exist.)
+MPC_270_20180105:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_242_20141006:  (Exception thrown in SimpleITK ImageFileReader_Execute: /home/conda/feedstock_root/build_artifacts/libsimpleitk_1698943771502/work/Code/IO/src/sitkImageReaderBase.cxx:97:
+sitk::ERROR: The file "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients/MPC_242_20141006/mask_PT_dilation.nii.gz" does not exist.)
+MPC_331_20160905:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_308_20170620:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_283_20141027:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3345_20210624:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_249_20130306:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_330_20190723:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_280_20110908:  (Calculation of GLCM Failed.)
+MPC_145_20081110: segmentation fault
+MPC_294_20090709: segmentation fault
+MPC_174_20110112: segmentation fault
+MPC_375_20170828:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_123_20210818: segmentation fault
+MPC_363_20180119:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3025_20200131:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3350_20210722:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_3349_20210715:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_272_20170103:  (No labels found in this mask (i.e. nothing is segmented)!) corrected still to extract
+MPC_296_20161026:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_367_20160905:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_224_20160118:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_1402_20171013:  (No labels found in this mask (i.e. nothing is segmented)!)
+MPC_2442_20190129:  (No labels found in this mask (i.e. nothing is segmented)!)
+P1:  (No labels found in this mask (i.e. nothing is segmented)!)
+
+
+cylinder:
+
+
+MPC_343_20191108: segmentation fault
