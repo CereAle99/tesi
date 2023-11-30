@@ -21,13 +21,13 @@ if __name__ == "__main__":
     for patient_id in patients:
         print("Patient: ", patient_id)
 
-        if patient_id != "MPC_296_20190708":
+        if patient_id != "MPC_249_20130306":
             continue
 
         try:
             sick_patient = os.path.join(sick_patients_path, patient_id)
             if os.path.isdir(sick_patient):
-                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.startswith("PT_f")]
+                nifti_files = [file_name for file_name in os.listdir(sick_patient) if file_name.startswith("PT")]
                 print(f"List of files in the folder {patient_id}: {nifti_files}")
                 for file in nifti_files:
                     file_path = os.path.join(sick_patient, file)
