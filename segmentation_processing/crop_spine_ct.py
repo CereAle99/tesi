@@ -1,11 +1,11 @@
 import nibabel as nib
 import numpy as np
 from scipy.ndimage import shift
-from segmentation_processing.resizePET_Ale import pet_compatible_to_ct
-from segmentation_processing.fill_spine import fill_spinal_holes
-from segmentation_processing.close_spine_area import dilate_spine
-from segmentation_processing.spine_outofthe_cylinder import spine_as_cylinder
-from segmentation_processing.binarize import binarize
+from segmentation_processing.resize_pet import pet_compatible_to_ct
+from segmentation_processing.segm_fill_spine import fill_spinal_holes
+from segmentation_processing.segm_dilation import dilate_spine
+from segmentation_processing.segm_cylinder import spine_as_cylinder
+from segmentation_processing.segm_binarize import binarize
 
 
 def crop_spine_from_ct(input_nifti, mask, shape="original", segmentation_value=41):
