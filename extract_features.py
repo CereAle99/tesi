@@ -66,15 +66,11 @@ if __name__ == "__main__":
                     # print(f"Feature {key}: {val}")
 
                 with open(os.path.join(sick_patients_path, "PT_rad_feats.csv"), "a", newline="") as csvfile:
-                    # Aggiungi il dizionario alla lista
-                    if fieldnames is None:
-                        # Se i fieldnames non sono ancora stati impostati, prendili dal primo dizionario
-                        fieldnames = new_line.keys()
 
-                    # Crea il writer
+                    # create writer
                     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                    # Scrivi il dizionario nel file CSV
+                    # Add dict new line on the file
                     writer.writerow(new_line)
 
                 # Add patient features line to the features dataframe
