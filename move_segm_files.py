@@ -3,10 +3,10 @@ import nibabel as nib
 import numpy as np
 import pandas as pd
 import copy
-from segmentation_processing.binarize import binarize
-from segmentation_processing.spine_outofthe_cylinder import spine_as_cylinder
-from segmentation_processing.fill_spine import fill_spinal_holes
-from segmentation_processing.close_spine_area import dilate_spine
+from segmentation_processing.segm_binarize import binarize
+from segmentation_processing.segm_cylinder import spine_as_cylinder
+from segmentation_processing.segm_fill_spine import fill_spinal_holes
+from segmentation_processing.segm_dilation import dilate_spine
 
 
 if __name__ == "__main__":
