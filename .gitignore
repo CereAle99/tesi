@@ -2,3 +2,4 @@
 /.idea
 /lib/segmentation_processing/__pycache__
 /lib/__pycache__
+/lib/preprocessing/__pycache__
