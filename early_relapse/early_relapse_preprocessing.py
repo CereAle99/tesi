@@ -6,13 +6,13 @@ import warnings  # Typically issued in situations where it is useful to alert th
 import os
 from sklearn.model_selection import StratifiedShuffleSplit
 from lifelines import KaplanMeierFitter
-from ..preprocessing.lib.bin_features import bin_feature
-from ..preprocessing.lib.remove_high_corr_feats import remove_highly_correlated_features
-from ..preprocessing.lib.drop_col_with_nan import drop_columns_with_nan
-from ..preprocessing.lib.filter_low_var_feats import filter_low_variance_features
-from ..preprocessing.lib.km_curve_plot import plot_km_curve_for_feature, plot_km_curve_for_features
-from ..preprocessing.lib.remove_duplicated import remove_duplicated_data
-from ..preprocessing.lib.scale_dataframe import scale_dataframes, scale_dataframes_zscore
+from lib.bin_features import bin_feature
+from lib.remove_high_corr_feats import remove_highly_correlated_features
+from lib.drop_col_with_nan import drop_columns_with_nan
+from lib.filter_low_var_feats import filter_low_variance_features
+from lib.km_curve_plot import plot_km_curve_for_feature, plot_km_curve_for_features
+from lib.remove_duplicated import remove_duplicated_data
+from lib.scale_dataframe import scale_dataframes_zscore
 
 
 warnings.filterwarnings('ignore')  # Ignores all warnings
