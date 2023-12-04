@@ -5,3 +5,5 @@ FileNotFoundError for patient:  MPC_3464_20211122 no segmentation found
 FileNotFoundError for patient:  MPC_381_20060908 no segmentation found
 FileNotFoundError for patient:  MPC_1402_20171013 segmented CT.nii which is just feet, CT1.nii is whole body
 FileNotFoundError for patient:  MPC_2442_20190129 segmented CT.nii which is just feet, CT3.nii is whole body
+FileNotFoundError for patient:  MPC_285_20140304 segmented just the head
+FileNotFoundError for patient:  MPC_2442_20190129 segmented just the head, CT3.nii is whole body
