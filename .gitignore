@@ -1,3 +1,4 @@
 /data
 /.idea
-/segmentation_processing/__pycache__
+/lib/segmentation_processing/__pycache__
+/lib/__pycache__
