@@ -2,7 +2,7 @@ import os
 import nibabel as nib
 import numpy as np
 import pandas as pd
-from segmentation_processing.crop_spine_pet import crop_spine_shape
+from lib.segmentation_processing import crop_spine_shape
 
 
 if __name__ == "__main__":

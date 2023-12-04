@@ -1,12 +1,9 @@
 import os
 import nibabel as nib
-import numpy as np
-import pandas as pd
-import copy
-from segmentation_processing.segm_binarize import binarize
-from segmentation_processing.segm_cylinder import spine_as_cylinder
-from segmentation_processing.segm_fill_spine import fill_spinal_holes
-from segmentation_processing.segm_dilation import dilate_spine
+from lib.segmentation_processing.segm_binarize import binarize
+from lib.segmentation_processing import spine_as_cylinder
+from lib.segmentation_processing import fill_spinal_holes
+from lib.segmentation_processing import dilate_spine
 
 
 if __name__ == "__main__":

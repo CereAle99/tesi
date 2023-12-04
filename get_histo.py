@@ -1,6 +1,6 @@
 import nibabel as nib
 import os
-from segmentation_processing.image_histo import image_histo
+from lib.segmentation_processing import image_histo
 
 
 if __name__ == "__main__":

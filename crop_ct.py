@@ -1,6 +1,6 @@
 import os
 import nibabel as nib
-from segmentation_processing.crop_spine_ct import crop_spine_from_ct
+from lib.segmentation_processing import crop_spine_from_ct
 
 
 if __name__ == "__main__":
