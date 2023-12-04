@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')  # Ignores all warnings
 if __name__ == "__main__":
 
     current_directory = os.getcwd()
-    data_path = os.path.join(current_directory , 'early_relapse', 'data')
+    data_path = os.path.join(current_directory, 'data')
 
     print("RAW MULTIOMICS DATASET")
 
