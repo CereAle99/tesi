@@ -2,3 +2,5 @@
 /lib/segmentation_processing/__pycache__
 /lib/__pycache__
 /early_relapse/lib/__pycache__
+/early_relapse/data
+/data
