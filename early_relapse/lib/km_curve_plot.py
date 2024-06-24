@@ -39,9 +39,9 @@ def plot_km_curve_for_feature(early_relapse_df, dataframe, feature_identifier):
             label=f'{feature_name}_1')
     kmf.plot_survival_function()
 
-    plt.title(f"Kaplan-Meier early_relapse Curve for {feature_name}")
-    plt.xlabel("Time")
-    plt.ylabel("Probability of early_relapse")
+    plt.title(f"Kaplan-Meier survival curve for {feature_name}")
+    plt.xlabel("Time (days)")
+    plt.ylabel("Probability of survival")
     plt.grid(True)
     plt.show()
 
@@ -75,9 +75,9 @@ def plot_km_curve_for_features(survival_df, dataframe, features, value=1):
                 label=feature)
         kmf.plot_survival_function()
 
-    plt.title(f"Kaplan-Meier early_relapse Curves")
-    plt.xlabel("Time")
-    plt.ylabel("Probability of early_relapse")
+    plt.title(f"Kaplan-Meier survival curves")
+    plt.xlabel("Time (days)")
+    plt.ylabel("Probability of survival")
     plt.grid(True)
     plt.legend()
     plt.show()
