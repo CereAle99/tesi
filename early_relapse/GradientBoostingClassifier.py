@@ -3,7 +3,7 @@ import os
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, log_loss
 import torch
 from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
 
     current_directory = os.getcwd()
-    data_path = os.path.join(current_directory, "data/")
+    data_path = os.path.join(current_directory, 'early_relapse', "data/")
 
     # Read data
-    early_relapse = pd.read_csv(data_path + "early_relapse.csv", sep=',')  # Reading early relapse data
+    early_relapse = pd.read_csv(data_path + "survival_complete.csv", sep=',')  # Reading early relapse data
     early_relapse = early_relapse.set_index('MPC')
-    early_relapse = early_relapse["early_relapse"]
+    early_relapse = early_relapse["PFS_I_EVENT"]
 
     filename = "CT_preprocessed.csv"
     CT_preprocessed = pd.read_csv(data_path + filename, sep=",")
@@ -36,38 +36,42 @@ if __name__ == "__main__":
     print(y.shape)
 
     # train-test split: Hold out the test set for final model evaluation
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, shuffle=True)
 
     # Create a model and train it
     gb_model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=5)
     gb_model.fit(X_train, y_train.reshape(-1))
 
-    # Define number of bootstrasp
-    n_bootstrap_iterations = 1000
+    # # Define number of bootstrasp
+    # n_bootstrap_iterations = 1000
 
-    bootstrap_accuracies = []
-    for _ in range(n_bootstrap_iterations):
+    # bootstrap_accuracies = []
+    # for _ in range(n_bootstrap_iterations):
 
-        # Randomly sample the test dataset
-        indices = np.random.choice(len(X_test), len(X_test), replace=True)
-        X_bootstrap = X_test[indices]
-        y_bootstrap = y_test[indices]
+    #     # Randomly sample the test dataset
+    #     indices = np.random.choice(len(X_test), len(X_test), replace=True)
+    #     X_bootstrap = X_test[indices]
+    #     y_bootstrap = y_test[indices]
 
-        # Evaluate the predicted values
-        y_pred = gb_model.predict(X_bootstrap)
+    #     # Evaluate the predicted values
+    #     y_pred = gb_model.predict(X_bootstrap)
 
-        # Accuracy evaluation
-        accuracy = accuracy_score(y_bootstrap, y_pred)
-        bootstrap_accuracies.append(accuracy)
+    #     # Accuracy evaluation
+    #     accuracy = accuracy_score(y_bootstrap, y_pred)
+    #     bootstrap_accuracies.append(accuracy)
 
-    # Mean accuracy evaluation
-    mean_accuracy = np.mean(bootstrap_accuracies)
+    # # Mean accuracy evaluation
+    # mean_accuracy = np.mean(bootstrap_accuracies)
 
-    # Confidence interval at 95%
-    confidence_interval = np.percentile(bootstrap_accuracies, [2.5, 97.5])
+    # # Confidence interval at 95%
+    # confidence_interval = np.percentile(bootstrap_accuracies, [2.5, 97.5])
 
-    print("Mean accuracy:", mean_accuracy)
-    print("Confidence interval at 95%:", confidence_interval)
+    # print("Mean accuracy:", mean_accuracy)
+    # print("Confidence interval at 95%:", confidence_interval)
+
+    accuracy = log_loss(y_test, gb_model.predict(X_test))
+    total_accuracy = log_loss(y_test, y_test)
+    print(accuracy/total_accuracy)
 
     with torch.no_grad():
         # Plot the ROC curve

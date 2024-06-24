@@ -1,9 +1,9 @@
 import os
 import nibabel as nib
 from lib.segmentation_processing.segm_binarize import binarize
-from lib.segmentation_processing import spine_as_cylinder
-from lib.segmentation_processing import fill_spinal_holes
-from lib.segmentation_processing import dilate_spine
+from lib.segmentation_processing.segm_cylinder import spine_as_cylinder
+from lib.segmentation_processing.segm_fill_spine import fill_spinal_holes
+from lib.segmentation_processing.segm_dilation import dilate_spine
 
 
 if __name__ == "__main__":
@@ -13,8 +13,9 @@ if __name__ == "__main__":
     shared_dir_path = "/run/user/1000/gvfs/smb-share:server=192.168.0.6,share=genomed"
     moose_path1 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_1"
     moose_path2 = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Moose_output/moose_2"
+    segmentations = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/Segmentations"
     data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Original/PET-CT"
-    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/sick_patients"
+    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
     # save_path = os.path.join(current_path, "data", "test_PET")
 
     # # For each patient in folder moose_1
@@ -75,25 +76,83 @@ if __name__ == "__main__":
     #             file.write(f"{patient_id}: Unknown error ({e})\n")
     #         continue
     #
+    # For each patient in folder moose_2
+    for patient_id in os.listdir(segmentations):
+    
+        if patient_id != "MPC_249_20130306":
+            continue
+    
+        print("Patient: ", patient_id)
+    
+        try:
+    
+            # # Find the label folder for moose 2.0
+            label_path = os.path.join(segmentations, patient_id, "Bones_CT.nii.gz")
+            print(label_path)
+            # label_path = os.path.join(patient_path, "Bones.nii.gz")
+
+            # Perform the shaping
+            mask = nib.load(label_path)
+            mask = binarize(mask, 27)
+            spine_filled = fill_spinal_holes(mask, 3, 3)
+            mask = nib.load(label_path)
+            mask = binarize(mask, 27)
+            spine_dilated = dilate_spine(mask, 3, True)
+            mask = nib.load(label_path)
+            mask = binarize(mask, 27)
+            spine_cylinder = spine_as_cylinder(mask, 3)
+            mask = nib.load(label_path)
+            mask = binarize(mask, 27)
+
+            # Save cropped PET
+            save_dir = os.path.join(save_path, patient_id)
+            nib.save(mask, save_dir + "/mask_CT_original.nii.gz")
+            nib.save(spine_filled, save_dir + "/mask_CT_fill_holes.nii.gz")
+            nib.save(spine_dilated, save_dir + "/mask_CT_dilation.nii.gz")
+            nib.save(spine_cylinder, save_dir + "/mask_CT_cylinder.nii.gz")
+            print("Saved: ", patient_id)
+    
+        except FileNotFoundError:
+            print("FileNotFoundError for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/move_segm_log.txt", "a") as file:
+                file.write(f"{patient_id}: FileNotFoundError\n")
+    
+        except StopIteration:
+            print("StopIteration for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/move_segm_log.txt", "a") as file:
+                file.write(f"{patient_id}: StopIteration\n")
+    
+        except Exception as e:
+            print(f"Unknown error ({e}) for patient: ", patient_id)
+            # Write the patient id which had an error
+            with open(current_path + "/log/move_segm_log.txt", "a") as file:
+                file.write(f"{patient_id}: Unknown error ({e})\n")
+
+    # Healthy patients cropping
+
+    # moose_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/moose_output"
+    # data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
+    # save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
+
+    # next_start = "PETCT_9a66a81ad1"
+    # patients = os.listdir(moose_path)
+    # index = patients.index(next_start)
+
     # # For each patient in folder moose_2
-    # for patient_id in os.listdir(moose_path2):
-    #
-    #     if patient_id != "MPC_249_20130306":
-    #         continue
-    #
+    # for patient_id in patients:
     #     print("Patient: ", patient_id)
-    #
+
     #     try:
-    #
-    #         # # Find the label folder for moose 2.0
-    #         start_seq = "moosez"
-    #         label_folder = [d for d in os.listdir(patient_path) if d.startswith(start_seq)]
-    #         label_path = os.path.join(patient_path, label_folder[0], "segmentations", "CT_Bones_V1_CT_0000.nii.gz")
-    #         # label_path = os.path.join(patient_path, "Bones.nii.gz")
-    #
-    #         # Load label
-    #         mask = nib.load(label_path)
-    #
+
+    #         # Find the label folder for moose on healthy patients
+    #         patient_label_path = os.path.join(moose_path, patient_id)
+    #         patient_moose_dir = [d for d in os.listdir(patient_label_path) if d.startswith("moosez")]
+    #         label_folder = os.path.join(patient_label_path, patient_moose_dir[0], "segmentations")
+    #         label_name = [d for d in os.listdir(label_folder) if ".nii.gz" in d]
+    #         label_path = os.path.join(label_folder, label_name[0])
+
     #         # Perform the shaping
     #         mask = nib.load(label_path)
     #         mask = binarize(mask, 15)
@@ -106,7 +165,7 @@ if __name__ == "__main__":
     #         spine_cylinder = spine_as_cylinder(mask, 3)
     #         mask = nib.load(label_path)
     #         mask = binarize(mask, 15)
-    #
+
     #         # Save cropped PET
     #         save_dir = os.path.join(save_path, patient_id)
     #         nib.save(mask, save_dir + "/mask_CT_original.nii.gz")
@@ -114,83 +173,21 @@ if __name__ == "__main__":
     #         nib.save(spine_dilated, save_dir + "/mask_CT_dilation.nii.gz")
     #         nib.save(spine_cylinder, save_dir + "/mask_CT_cylinder.nii.gz")
     #         print("Saved: ", patient_id)
-    #
+
     #     except FileNotFoundError:
     #         print("FileNotFoundError for patient: ", patient_id)
     #         # Write the patient id which had an error
-    #         with open(current_path + "/log/move_segm_log.txt", "a") as file:
+    #         with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
     #             file.write(f"{patient_id}: FileNotFoundError\n")
-    #
+
     #     except StopIteration:
     #         print("StopIteration for patient: ", patient_id)
     #         # Write the patient id which had an error
-    #         with open(current_path + "/log/move_segm_log.txt", "a") as file:
+    #         with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
     #             file.write(f"{patient_id}: StopIteration\n")
-    #
+
     #     except Exception as e:
     #         print(f"Unknown error ({e}) for patient: ", patient_id)
     #         # Write the patient id which had an error
-    #         with open(current_path + "/log/move_segm_log.txt", "a") as file:
+    #         with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
     #             file.write(f"{patient_id}: Unknown error ({e})\n")
-
-    # Healthy patients cropping
-
-    moose_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/moose_output"
-    data_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/Healthy/HEALTHY-PET-CT/FDG-PET-CT-Lesions"
-    save_path = shared_dir_path + "/Genomed4All_Data/MultipleMieloma/spine_PET/healthy_patients"
-
-    next_start = "PETCT_9a66a81ad1"
-    patients = os.listdir(moose_path)
-    index = patients.index(next_start)
-
-    # For each patient in folder moose_2
-    for patient_id in patients:
-        print("Patient: ", patient_id)
-
-        try:
-
-            # Find the label folder for moose on healthy patients
-            patient_label_path = os.path.join(moose_path, patient_id)
-            patient_moose_dir = [d for d in os.listdir(patient_label_path) if d.startswith("moosez")]
-            label_folder = os.path.join(patient_label_path, patient_moose_dir[0], "segmentations")
-            label_name = [d for d in os.listdir(label_folder) if ".nii.gz" in d]
-            label_path = os.path.join(label_folder, label_name[0])
-
-            # Perform the shaping
-            mask = nib.load(label_path)
-            mask = binarize(mask, 15)
-            spine_filled = fill_spinal_holes(mask, 3, 3)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 15)
-            spine_dilated = dilate_spine(mask, 3, True)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 15)
-            spine_cylinder = spine_as_cylinder(mask, 3)
-            mask = nib.load(label_path)
-            mask = binarize(mask, 15)
-
-            # Save cropped PET
-            save_dir = os.path.join(save_path, patient_id)
-            nib.save(mask, save_dir + "/mask_CT_original.nii.gz")
-            nib.save(spine_filled, save_dir + "/mask_CT_fill_holes.nii.gz")
-            nib.save(spine_dilated, save_dir + "/mask_CT_dilation.nii.gz")
-            nib.save(spine_cylinder, save_dir + "/mask_CT_cylinder.nii.gz")
-            print("Saved: ", patient_id)
-
-        except FileNotFoundError:
-            print("FileNotFoundError for patient: ", patient_id)
-            # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
-                file.write(f"{patient_id}: FileNotFoundError\n")
-
-        except StopIteration:
-            print("StopIteration for patient: ", patient_id)
-            # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
-                file.write(f"{patient_id}: StopIteration\n")
-
-        except Exception as e:
-            print(f"Unknown error ({e}) for patient: ", patient_id)
-            # Write the patient id which had an error
-            with open(current_path + "/log/healthy_cropping_CT.txt", "a") as file:
-                file.write(f"{patient_id}: Unknown error ({e})\n")
